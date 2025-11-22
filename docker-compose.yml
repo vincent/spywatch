@@ -1,0 +1,24 @@
+volumes:
+  spywatch_data: # for persistent database
+
+services:
+  spywatch:
+    image: ghcr.io/vincent/spywatch:main
+    restart: unless-stopped
+    environment:
+      - SPYWATCH_ADMIN_EMAIL=                # superadmin account email | optional
+      - SPYWATCH_ADMIN_PASSWORD=             # superadmin account password | optional
+      - SPYWATCH_SMTP_HOST=                  # SMTP host
+      - SPYWATCH_SMTP_PORT=                  # SMTP port
+      - SPYWATCH_SMTP_USERNAME=              # SMTP username
+      - SPYWATCH_SMTP_PASSWORD=              # SMTP password
+      - SPYWATCH_SMTP_TLS=                   # SMTP TLS, FALSE to disable | optional
+      - SPYWATCH_SMTP_AUTHMETHOD=            # SMTP auth: PLAIN (default) or LOGIN | optional
+      - SPYWATCH_SMTP_LOCALNAME=             # SMTP localname for EHLO/HELO exchange | optional
+      - SPYWATCH_VAPID_PUBLIC_KEY=           # web push notifications public key
+      - SPYWATCH_VAPID_PRIVATE_KEY=          # web push notifications private key
+
+    volumes:
+      - spywatch_data:/srv/spywatch/data
+    ports:
+      - 8090:8090

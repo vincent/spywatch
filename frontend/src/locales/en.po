@@ -1,0 +1,396 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-03T15:00:30.853Z\n"
+"PO-Revision-Date: 2025-11-22T00:45:32.259Z\n"
+"Last-Translator: \n"
+"Language: en\n"
+"Language-Team: \n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n == 1 ? 0 : 1;\n"
+"MIME-Version: 1.0\n"
+
+#~ msgid "Welcome to SpyWatch"
+#~ msgstr "Welcome to SpyWatch"
+
+#~ msgid "Track website changes with ease."
+#~ msgstr "Track website changes with ease."
+
+#: src/routes/login/+page.svelte
+#: src/routes/login/+page.svelte
+msgid "Login"
+msgstr "Login"
+
+#: src/routes/signup/+page.svelte
+msgid "Sign Up"
+msgstr "Sign Up"
+
+#~ msgid "Email: <0/>"
+#~ msgstr "Email: <0/>"
+
+#~ msgid "Password: <0/>"
+#~ msgstr "Password: <0/>"
+
+#~ msgid "Don't have an account? <0>Sign up</0>"
+#~ msgstr "Don't have an account? <0>Sign up</0>"
+
+#~ msgid "Dashboard"
+#~ msgstr "Dashboard"
+
+#~ msgid "Your tracked sites will appear here."
+#~ msgstr "Your tracked sites will appear here."
+
+#: src/lib/components/SiteForm.svelte
+#: src/lib/components/SiteTable.svelte
+msgid "Name"
+msgstr "Name"
+
+#: src/lib/components/SiteForm.svelte
+#: src/lib/components/SiteTable.svelte
+msgid "URL"
+msgstr "URL"
+
+#: src/lib/components/SiteTable.svelte
+msgid "Last Checked"
+msgstr "Last Checked"
+
+#: src/lib/components/SiteTable.svelte
+msgid "Actions"
+msgstr "Actions"
+
+#: src/lib/components/SiteTable.svelte
+msgid "View"
+msgstr "View"
+
+#~ msgid "Site Change Details"
+#~ msgstr "Site Change Details"
+
+#~ msgid "Details for site ID: {0}"
+#~ msgstr "Details for site ID: {0}"
+
+#~ msgid "LinuxFR"
+#~ msgstr "LinuxFR"
+
+#~ msgid "Name: <0/>"
+#~ msgstr "Name: <0/>"
+
+#~ msgid "URL: <0/>"
+#~ msgstr "URL: <0/>"
+
+#~ msgid "Notes: <0/>"
+#~ msgstr "Notes: <0/>"
+
+#: src/routes/competitors/[id]/+page.svelte
+msgid "No history available."
+msgstr "No history available."
+
+#: src/routes/competitors/[id]/+page.svelte
+msgid "First content"
+msgstr "First content"
+
+#: src/routes/competitors/[id]/+page.svelte
+#: src/routes/competitors/[id]/[eventId]/+page.svelte
+#: src/routes/competitors/[id]/diff/[eventId]/+page.svelte
+msgid "Change History:"
+msgstr "Change History:"
+
+#: src/routes/competitors/[id]/+page.svelte
+#: src/routes/competitors/[id]/[eventId]/+page.svelte
+#: src/routes/competitors/[id]/diff/[eventId]/+page.svelte
+msgid "Loading history..."
+msgstr "Loading history..."
+
+#~ msgid "Signup not yet implemented."
+#~ msgstr "Signup not yet implemented."
+
+#~ msgid "Confirm Password: <0/>"
+#~ msgstr "Confirm Password: <0/>"
+
+#: src/routes/signup/+page.svelte
+msgid "Already have an account? <0>Login</0>"
+msgstr "Already have an account? <0>Login</0>"
+
+#~ msgid "February 2022"
+#~ msgstr "February 2022"
+
+#~ msgid "Application UI code in Tailwind CSS"
+#~ msgstr "Application UI code in Tailwind CSS"
+
+#~ msgid "Get access to over 20+ pages including a dashboard layout, charts, kanban board, calendar, and pre-order E-commerce & Marketing pages."
+#~ msgstr "Get access to over 20+ pages including a dashboard layout, charts, kanban board, calendar, and pre-order E-commerce & Marketing pages."
+
+#~ msgid "Learn more <0/>"
+#~ msgstr "Learn more <0/>"
+
+#~ msgid "March 2022"
+#~ msgstr "March 2022"
+
+#~ msgid "Marketing UI design in Figma"
+#~ msgstr "Marketing UI design in Figma"
+
+#~ msgid "All of the pages and components are first designed in Figma and we keep a parity between the two versions even as we update the project."
+#~ msgstr "All of the pages and components are first designed in Figma and we keep a parity between the two versions even as we update the project."
+
+#~ msgid "April 2022"
+#~ msgstr "April 2022"
+
+#~ msgid "E-Commerce UI code in Tailwind CSS"
+#~ msgstr "E-Commerce UI code in Tailwind CSS"
+
+#~ msgid "Get started with dozens of web components and interactive elements built on top of Tailwind CSS."
+#~ msgstr "Get started with dozens of web components and interactive elements built on top of Tailwind CSS."
+
+#: src/routes/competitors/[id]/[eventId]/+page.svelte
+#: src/routes/competitors/[id]/diff/[eventId]/+page.svelte
+msgid "No diff data"
+msgstr "No diff data"
+
+#: src/routes/+page.svelte
+msgid "SpyWatch"
+msgstr "SpyWatch"
+
+#: src/routes/+page.svelte
+msgid "Stay ahead of your competitors, effortlessly."
+msgstr "Stay ahead of your competitors, effortlessly."
+
+#~ msgid "SpyWatch monitors your competitors' websites and notifies you of every change. Track pricing, new features, and more—automatically."
+#~ msgstr "SpyWatch monitors your competitors' websites and notifies you of every change. Track pricing, new features, and more—automatically."
+
+#: src/routes/+page.svelte
+msgid "Get Started Free"
+msgstr "Get Started Free"
+
+#: src/routes/+page.svelte
+msgid "Why Choose SpyWatch?"
+msgstr "Why Choose SpyWatch?"
+
+#: src/routes/+page.svelte
+msgid "Automated Monitoring"
+msgstr "Automated Monitoring"
+
+#: src/routes/+page.svelte
+msgid "Get instant alerts when your competitors update their websites, launch new products, or change prices."
+msgstr "Get instant alerts when your competitors update their websites, launch new products, or change prices."
+
+#: src/routes/+page.svelte
+msgid "Visual Change Tracking"
+msgstr "Visual Change Tracking"
+
+#: src/routes/+page.svelte
+msgid "See exactly what changed with side-by-side diffs and visual highlights for every update."
+msgstr "See exactly what changed with side-by-side diffs and visual highlights for every update."
+
+#: src/routes/+page.svelte
+msgid "Easy Setup"
+msgstr "Easy Setup"
+
+#: src/routes/+page.svelte
+msgid "Start tracking any website in seconds—no coding or complex configuration required."
+msgstr "Start tracking any website in seconds—no coding or complex configuration required."
+
+#: src/routes/+page.svelte
+msgid "Real-Time Notifications"
+msgstr "Real-Time Notifications"
+
+#: src/routes/+page.svelte
+msgid "Receive email or in-app notifications the moment something changes, so you never miss a beat."
+msgstr "Receive email or in-app notifications the moment something changes, so you never miss a beat."
+
+#: src/routes/+page.svelte
+msgid "See SpyWatch in Action"
+msgstr "See SpyWatch in Action"
+
+#: src/routes/+page.svelte
+msgid "SpyWatch screenshot"
+msgstr "SpyWatch screenshot"
+
+#: src/routes/+page.svelte
+msgid "Ready to get started?"
+msgstr "Ready to get started?"
+
+#: src/routes/+page.svelte
+msgid "Create Your Free Account"
+msgstr "Create Your Free Account"
+
+#: src/routes/+page.svelte
+msgid "SpyWatch monitors your competitors' websites and notifies you of every change. Track pricing, new features and more, automatically."
+msgstr "SpyWatch monitors your competitors' websites and notifies you of every change. Track pricing, new features and more, automatically."
+
+#: src/routes/login/+page.svelte
+msgid "Email <0/>"
+msgstr "Email <0/>"
+
+#: src/routes/login/+page.svelte
+msgid "Your password"
+msgstr "Your password"
+
+#: src/routes/login/+page.svelte
+msgid "Password <0/>"
+msgstr "Password <0/>"
+
+#: src/routes/login/+page.svelte
+msgid "Logging in..."
+msgstr "Logging in..."
+
+#: src/routes/login/+page.svelte
+msgid "Sign up"
+msgstr "Sign up"
+
+#: src/routes/login/+page.svelte
+msgid "Forgot password?"
+msgstr "Forgot password?"
+
+#: src/routes/signup/+page.svelte
+msgid "Full name is required."
+msgstr "Full name is required."
+
+#: src/routes/signup/+page.svelte
+msgid "Please enter a valid email address."
+msgstr "Please enter a valid email address."
+
+#: src/routes/signup/+page.svelte
+msgid "Password must be at least 8 characters and contain a letter and a number."
+msgstr "Password must be at least 8 characters and contain a letter and a number."
+
+#: src/routes/signup/+page.svelte
+msgid "Passwords do not match."
+msgstr "Passwords do not match."
+
+#: src/routes/signup/+page.svelte
+msgid "You must accept the terms and privacy policy."
+msgstr "You must accept the terms and privacy policy."
+
+#: src/routes/signup/+page.svelte
+msgid "Signup successful! (Not yet implemented)"
+msgstr "Signup successful! (Not yet implemented)"
+
+#: src/routes/signup/+page.svelte
+msgid "Create your account"
+msgstr "Create your account"
+
+#: src/routes/signup/+page.svelte
+msgid "Full Name"
+msgstr "Full Name"
+
+#: src/routes/signup/+page.svelte
+msgid "Your full name"
+msgstr "Your full name"
+
+#: src/routes/signup/+page.svelte
+msgid "Email"
+msgstr "Email"
+
+#: src/routes/signup/+page.svelte
+#: src/routes/signup/+page.svelte
+msgid "Password"
+msgstr "Password"
+
+#: src/routes/signup/+page.svelte
+msgid "At least 8 characters, 1 letter, 1 number"
+msgstr "At least 8 characters, 1 letter, 1 number"
+
+#: src/routes/signup/+page.svelte
+msgid "Confirm Password"
+msgstr "Confirm Password"
+
+#: src/routes/signup/+page.svelte
+msgid "Confirm password"
+msgstr "Confirm password"
+
+#: src/routes/signup/+page.svelte
+msgid "I accept the <0>Terms</0> and <1>Privacy Policy</1>"
+msgstr "I accept the <0>Terms</0> and <1>Privacy Policy</1>"
+
+#: src/routes/signup/+page.svelte
+msgid "or sign up with"
+msgstr "or sign up with"
+
+#: src/routes/competitors/+page.svelte
+msgid "Competitors to Watch"
+msgstr "Competitors to Watch"
+
+#: src/routes/competitors/+page.svelte
+msgid "Here is a selection of leading website change monitoring tools to keep an eye on:"
+msgstr "Here is a selection of leading website change monitoring tools to keep an eye on:"
+
+#~ msgid "Visit Website"
+#~ msgstr "Visit Website"
+
+#: src/lib/components/SiteForm.svelte
+msgid "POST"
+msgstr "POST"
+
+#~ msgid ""
+#~ "bind:value={0} required\n"
+#~ "Watched resources: <0/>"
+#~ msgstr ""
+#~ "bind:value={0} required\n"
+#~ "Watched resources: <0/>"
+
+#~ msgid "Watched resources: <0/> <1/>"
+#~ msgstr "Watched resources: <0/> <1/>"
+
+#: src/lib/components/SiteForm.svelte
+msgid "Competitor Form"
+msgstr "Competitor Form"
+
+#: src/lib/components/SiteForm.svelte
+msgid "Add or edit a competitor and manage their watched resources."
+msgstr "Add or edit a competitor and manage their watched resources."
+
+#: src/lib/components/SiteForm.svelte
+msgid "Competitor name"
+msgstr "Competitor name"
+
+#~ msgid "Notes"
+#~ msgstr "Notes"
+
+#~ msgid "Additional notes (optional)"
+#~ msgstr "Additional notes (optional)"
+
+#: src/lib/components/SiteForm.svelte
+msgid "Watched resources"
+msgstr "Watched resources"
+
+#~ msgid "View history"
+#~ msgstr "View history"
+
+#~ msgid "Website"
+#~ msgstr "Website"
+
+#: src/routes/competitors/+page.svelte
+msgid "History"
+msgstr "History"
+
+#: src/routes/releases/+page.svelte
+msgid "Competitors Watch Report"
+msgstr "Competitors Watch Report"
+
+#~ msgid "Stay ahead by tracking what your competitors are changing. See the latest updates, features, and announcements from leading website monitoring tools."
+#~ msgstr "Stay ahead by tracking what your competitors are changing. See the latest updates, features, and announcements from leading website monitoring tools."
+
+#~ msgid "Recent Updates"
+#~ msgstr "Recent Updates"
+
+#. placeholder {0}: new Date().getFullYear()
+#: src/routes/releases/+page.svelte
+msgid "© {0} Competitors Watch Report — Demo UI"
+msgstr "© {0} Competitors Watch Report — Demo UI"
+
+#: src/routes/releases/+page.svelte
+msgid ""
+"Stay ahead by tracking what your competitors are changing. See the latest updates, features,\n"
+"and announcements from leading website monitoring tools."
+msgstr ""
+"Stay ahead by tracking what your competitors are changing. See the latest updates, features,\n"
+"and announcements from leading website monitoring tools."
+
+#: src/routes/competitors/+page.svelte
+msgid "Edit"
+msgstr "Edit"
+
+#: src/routes/competitors/[id]/edit/+page.svelte
+msgid "Loading ..."
+msgstr "Loading ..."
