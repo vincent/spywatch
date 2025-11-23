@@ -15,6 +15,7 @@ export enum Collections {
 	Resources = "resources",
 	Snapshots = "snapshots",
 	Users = "users",
+	Workspaces = "workspaces",
 }
 
 // Alias types for improved usability
@@ -103,6 +104,7 @@ export type CompetitorsRecord = {
 	owner?: RecordIdString
 	updated?: IsoDateString
 	url: string
+	workspace?: RecordIdString
 }
 
 export type ResourcesRecord = {
@@ -137,6 +139,13 @@ export type UsersRecord = {
 	verified?: boolean
 }
 
+export type WorkspacesRecord = {
+	created?: IsoDateString
+	id: string
+	name?: string
+	updated?: IsoDateString
+}
+
 // Response types include system fields and match responses from the PocketBase API
 export type AuthoriginsResponse<Texpand = unknown> = Required<AuthoriginsRecord> & BaseSystemFields<Texpand>
 export type ExternalauthsResponse<Texpand = unknown> = Required<ExternalauthsRecord> & BaseSystemFields<Texpand>
@@ -147,6 +156,7 @@ export type CompetitorsResponse<Texpand = unknown> = Required<CompetitorsRecord>
 export type ResourcesResponse<Texpand = unknown> = Required<ResourcesRecord> & BaseSystemFields<Texpand>
 export type SnapshotsResponse<Texpand = unknown> = Required<SnapshotsRecord> & BaseSystemFields<Texpand>
 export type UsersResponse<Texpand = unknown> = Required<UsersRecord> & AuthSystemFields<Texpand>
+export type WorkspacesResponse<Texpand = unknown> = Required<WorkspacesRecord> & BaseSystemFields<Texpand>
 
 // Types containing all Records and Responses, useful for creating typing helper functions
 
@@ -160,6 +170,7 @@ export type CollectionRecords = {
 	resources: ResourcesRecord
 	snapshots: SnapshotsRecord
 	users: UsersRecord
+	workspaces: WorkspacesRecord
 }
 
 export type CollectionResponses = {
@@ -172,6 +183,7 @@ export type CollectionResponses = {
 	resources: ResourcesResponse
 	snapshots: SnapshotsResponse
 	users: UsersResponse
+	workspaces: WorkspacesResponse
 }
 
 // Type for usage with type asserted PocketBase instance
@@ -187,4 +199,5 @@ export type TypedPocketBase = PocketBase & {
 	collection(idOrName: 'resources'): RecordService<ResourcesResponse>
 	collection(idOrName: 'snapshots'): RecordService<SnapshotsResponse>
 	collection(idOrName: 'users'): RecordService<UsersResponse>
+	collection(idOrName: 'workspaces'): RecordService<WorkspacesResponse>
 }

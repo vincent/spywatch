@@ -2,7 +2,7 @@
 	import { Breadcrumb, BreadcrumbItem, Button, Heading } from 'flowbite-svelte';
 	import { onMount, type Component } from 'svelte';
 	import { Plus } from '@lucide/svelte';
-	import type { CompetitorsRecord } from '$lib/pocketbase/generated-types';
+	import type { CompetitorsResponse } from '$lib/pocketbase/generated-types';
 	import CompetitorDrawer from '$lib/components/CompetitorDrawer.svelte';
 	import DeleteDrawer from '$lib/components/DeleteDrawer.svelte';
 	import SiteTable from '$lib/components/SiteTable.svelte';
@@ -18,9 +18,11 @@
 	};
 
 	const competitors = client.collection('competitors');
-	let list = $state<CompetitorsRecord[]>([]);
+	let list = $state<CompetitorsResponse[]>([]);
 	async function afterUpdate() {
-		list = await competitors.getFullList<CompetitorsRecord>();
+		list = await competitors.getFullList<CompetitorsResponse>({
+			expand: 'workspace'
+		});
 	}
 	onMount(async () => {
 		afterUpdate()
@@ -43,7 +45,7 @@
 
 	<SiteTable
 		competitors={list}
-		edit={(c: CompetitorsRecord) => ((current_competitor = c), toggle(DrawerComponent))}
+		edit={(c: CompetitorsResponse) => ((current_competitor = c), toggle(DrawerComponent))}
 		remove={() => toggle(DeleteDrawer)}
 	/>
 </main>

@@ -36,7 +36,7 @@ func CreateResourceSnapshot(app *pocketbase.PocketBase, resourceId string) error
 	url := res.GetString("url")
 	html, err := scrapper.FetchHTML(url)
 	if err != nil {
-		app.Logger().Error("[CreateResourceSnapshot] cannot extract content", "error", err)
+		app.Logger().Error("[CreateResourceSnapshot] cannot fetch content", "error", err)
 		return nil
 	}
 	newContent, err := scrapper.HTMLToMarkdown(app, html)

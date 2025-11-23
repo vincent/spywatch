@@ -5,8 +5,9 @@
 	import { DraftingCompass } from '@lucide/svelte';
 	import { client } from '$lib/pocketbase';
 	import { onMount } from 'svelte';
+	import WorkspaceSelector from './WorkspaceSelector.svelte';
 
-	let { open = $bindable(), afterUpdate = null, data = { id: '', name: '', url: '', logo: '' } } = $props();
+	let { open = $bindable(), afterUpdate = null, data = { id: '', name: '', url: '', logo: '' , workspace: '' } } = $props();
 
 	let resources = $state<ResourcesRecord[]>([]);
 	let selectedResources = $state<Record<string, boolean>>({});
@@ -107,6 +108,10 @@
 			/>
 		</Label>
 		{#if data.url}
+			<Label class="space-y-2">
+				<span>Workspace</span>
+				<WorkspaceSelector bind:value={data.workspace} afterCreate={(workspace: string) => (data = {...data, workspace})} />
+			</Label>
 			<Label class="space-y-2">
 				<span> Name </span>
 				<div class="flex items-center mt-2">

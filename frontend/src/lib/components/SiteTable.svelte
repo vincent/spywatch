@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { Button, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
-	import type { CompetitorsRecord } from '$lib/pocketbase/generated-types';
+	import type { CompetitorsResponse } from '$lib/pocketbase/generated-types';
 	import { EditOutline, TrashBinSolid } from 'flowbite-svelte-icons';
 	import CompetitorLogo from './CompetitorLogo.svelte';
 	
 	type Props = {
-		competitors: CompetitorsRecord[],
+		competitors: CompetitorsResponse[],
 		edit: CallableFunction,
 		remove: CallableFunction
 	}
@@ -16,6 +16,7 @@
 	<TableHead class="border-y border-gray-200 bg-gray-100 dark:border-gray-700">
 		<TableHeadCell class="ps-4 font-normal w-30">Name</TableHeadCell>
 		<TableHeadCell class="ps-4 font-normal">URL</TableHeadCell>
+		<TableHeadCell class="ps-4 font-normal">Workspace</TableHeadCell>
 		<TableHeadCell class="ps-4 font-normal"></TableHeadCell>
 	</TableHead>
 	<TableBody>
@@ -32,6 +33,7 @@
 				<TableBodyCell class="p-4"
 					><a href={competitor.url} target="_blank">{competitor.url}</a></TableBodyCell
 				>
+				<TableBodyCell class="p-4">{(competitor.expand as any)?.workspace?.name}</TableBodyCell>
 				<TableBodyCell class="space-x-2 text-right">
 					<Button
 						size="sm"
