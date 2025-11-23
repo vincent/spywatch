@@ -1,132 +1,164 @@
 <script lang="ts">
-	import { client } from "$lib/pocketbase";
-	import type { ResourcesRecord } from "$lib/pocketbase/generated-types";
-	import type { RecordModel } from "pocketbase";
-	import { onMount } from "svelte";
+	import type { CompetitorsRecord, ResourcesRecord } from '$lib/pocketbase/generated-types';
+	import { Button, Input, Label } from 'flowbite-svelte';
+	import { CloseOutline } from 'flowbite-svelte-icons';
+	import { DraftingCompass } from '@lucide/svelte';
+	import { client } from '$lib/pocketbase';
+	import { onMount } from 'svelte';
 
-	// Props: site (optional, for editing)
-	let { site = { id: "", name: "", url: "", logo: "" } } = $props();
+	let { open = $bindable(), afterUpdate = null, data = { id: '', name: '', url: '', logo: '' } } = $props();
 
 	let resources = $state<ResourcesRecord[]>([]);
 	let selectedResources = $state<Record<string, boolean>>({});
 
+	const db = {
+		competitors: client.collection('competitors'),
+		resources: client.collection('resources'),
+	}
+
 	onMount(async () => {
-		if (!site.name) return;
-		selectedResources = (await client.collection("resources").getFullList({ filter: `competitor='${site.id}'` })).reduce((acc, r) => ({ ...acc, [`${r.url}`]: true }), {});
-		resources = site.found_resources.split('###').map((url: string) => ({ url }))
+		if (!data.id) return;
+		data = await db.competitors.getOne<CompetitorsRecord>(data.id as string);
+		resources = await db.resources.getFullList({ filter: `url!='' && competitor='${data.id}'` })
+		selectedResources = resources.reduce((acc, r) => ({ ...acc, [`${r.url}`]: true }), {});
 	});
 
 	function reset() {
-		resources = []
-		selectedResources = {}
-		handleSubmit()
+		resources = [];
+		selectedResources = {};
+		handleSubmit();
+	}
+
+	function preview() {
+		client
+			.send('/api/preview', {
+				method: 'POST',
+				body: data
+			})
+			.then((p) => {
+				if (p.logo && !data.logo) data = { ...data, logo: p.logo };
+				if (p.title && !data.name) data = { ...data, name: p.title };
+
+				resources = []
+					.concat(p.ownLinks)
+					.concat(p.socialNetworks)
+					.map((url) => resources.find((r) => r.url === url) ?? { id: '', url });
+
+				selectedResources = resources.reduce(
+					(acc, r) => ({
+						...acc,
+						[r.url as string]: r.url?.replace(/\/$/, '') === data.url.replace(/\/$/, '')
+					}),
+					{}
+				);
+			});
 	}
 
 	async function handleSubmit(event?: Event) {
 		event?.preventDefault();
 
-		if (resources.length) {
-			if (!site.id) {
-				site = await client.collection("competitors").create({
-					owner: client.authStore.record?.id,
-					found_resources: resources.map(r => r.url).join('###'),
-					...site
-				});
-			}
+		if (!resources.length) {
+			preview()
+			return;
+		}
 
-			const rInsert = Object.entries(selectedResources).filter(([url, selected]) => url && selected);
-			for (let index = 0; index < rInsert.length; index++) {
-				const [url] = rInsert[index];
-				await client.collection("resources").create<ResourcesRecord>({
-					competitor: site.id,
-					url,
-				});
-			}
-
+		if (!data.id) {
+			data = await client.collection('competitors').create({
+				owner: client.authStore.record?.id,
+				found_resources: resources.map((r) => r.url).join('###'),
+				...data
+			});
 		} else {
-			client.send("/api/preview", {
-				method: "POST",
-				body: site,
-			}).then(p => {
-				if (p.logo && !site.logo) site = { ...site, logo: p.logo }
-				if (p.title && !site.name) site = { ...site, name: p.title }
-				resources = (p.ownLinks as string[]).map(url => resources.find(r => r.url === url) ?? { id: '', url });
-				selectedResources = resources.reduce((acc, r) => ({ ...acc, [r.url as string]: r.url?.replace(/\/$/, '') === site.url.replace(/\/$/, '') }), {});
+			data = await client.collection('competitors').update(data.id, {
+				found_resources: resources.map((r) => r.url).join('###'),
+				...data
 			});
 		}
+
+		const toInsert = Object.entries(selectedResources)
+			.filter(([url, selected]) => url && selected)
+			.map(([u]) => resources.find(r => (r.url as string) === u));
+
+		for (let index = 0; index < toInsert.length; index++) {
+			const url = toInsert[index];
+			await client.collection('resources').create<ResourcesRecord>({
+				competitor: data.id,
+				url
+			});
+		}
+
+		open = false
+		afterUpdate?.()
 	}
 </script>
 
-<div class="flex justify-center items-center min-h-screen bg-gray-50 py-8">
-	<div class="w-full max-w-lg bg-white shadow-lg rounded-lg p-8">
-		<h2 class="text-2xl font-bold mb-2 text-gray-800">Competitor Form</h2>
-		<p class="mb-6 text-gray-500">Add or edit a competitor and manage their watched resources.</p>
-		<form onsubmit={handleSubmit} class="space-y-6">
-			<div>
-				<label class="block text-sm font-medium text-gray-700 mb-1" for="url">URL</label>
-				<input
-					id="url"
-					type="url"
-					bind:value={site.url}
-					onchange={reset}
-					required
-					class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-					placeholder="https://competitor.com"
-				/>
-			</div>
-			{#if site.url}
-				<div>
-					<label class="block text-sm font-medium text-gray-700 mb-1" for="name">Name</label>
-					<div class="flex items-center">
-						<input
-							id="name"
-							type="text"
-							bind:value={site.name}
-							required
-							class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-							placeholder="Competitor name"
-						/>
-						{#if site.logo}
-							<img
-								class="w-10 h-10 ms-2 object-contain"
-								src={site.logo}
-								alt={site.name + ' logo'}
-							/>
-						{/if}
-					</div>
+<form onsubmit={handleSubmit} class="space-y-6">
+	<div class="space-y-4">
+		<Label class="space-y-2">
+			<span>URL</span>
+			<Input
+				name="url"
+				class="border font-normal outline-none mt-2"
+				placeholder="https://competitor.com"
+				bind:value={data.url}
+				onchange={reset}
+				type="url"
+				required
+			/>
+		</Label>
+		{#if data.url}
+			<Label class="space-y-2">
+				<span> Name </span>
+				<div class="flex items-center mt-2">
+					<Input
+						name="name"
+						class="border font-normal outline-none"
+						placeholder="Competitor name"
+						bind:value={data.name}
+						type="text"
+						required
+					/>
+					{#if data.logo}
+						<img class="w-10 h-10 ms-2 object-contain" src={data.logo} alt={data.name + ' logo'} />
+					{/if}
 				</div>
-			{/if}
-			{#if resources.length}
-				<div>
-					<span class="block text-sm font-medium text-gray-700 mb-2">Watched resources</span>
-					<div class="space-y-2">
-						{#each resources as res}
-							<label class="flex items-center space-x-2">
+			</Label>
+		{/if}
+		{#if resources.length}
+			<Label class="space-y-2">
+				<span> Watched resources </span>
+				<div class="space-y-2 ps-4 mt-2">
+					{#each resources as res}
+						<div class="flex items-center space-x-2">
+							<Label>
 								<input
 									type="checkbox"
 									bind:checked={selectedResources[res.url as string]}
-									class="form-checkbox h-4 w-4 text-blue-600 border-gray-300 rounded"
+									class="form-checkbox h-4 w-4 me-1 text-blue-600 border-gray-300 rounded"
 								/>
-								<span class="text-gray-700">{res.url}</span>
-							</label>
-						{/each}
-					</div>
+								{res.url}
+							</Label>
+						</div>
+					{/each}
 				</div>
+			</Label>
+		{/if}
+		<div class="bottom-0 left-0 flex w-full justify-center space-x-4 pb-4 md:px-4 mt-10">
+			<Button type="button" onclick={preview} outline={!!resources.length}>
+				<DraftingCompass />
+				Preview
+			</Button>
+			{#if resources.length}
+				<Button type="submit" class="w-full">
+					{data && data.id
+						? 'Update competitor'
+						: 'Add competitor'}
+				</Button>
 			{/if}
-			<div class="flex justify-end">
-				<button
-					type="submit"
-					class="inline-flex items-center px-6 py-2 bg-blue-600 text-white font-semibold rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-				>
-					{site && site.id
-						? resources.length
-							? "Update competitor"
-							: "Update competitor"
-						: resources.length
-							? "Add competitor"
-							: "Preview"}
-				</button>
-			</div>
-		</form>
+			<Button color="alternative" class="w-full" onclick={() => (open = false)}>
+				<CloseOutline />
+				Cancel
+			</Button>
+		</div>
 	</div>
-</div>
+</form>

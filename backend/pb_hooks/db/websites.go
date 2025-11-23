@@ -1,12 +1,8 @@
 package db
 
 import (
-	"context"
-	"encoding/json"
-	cd "pocketbase/pb_hooks/services/changedetection"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/pocketbase/dbx"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
@@ -45,51 +41,6 @@ func CreateWebsite(app *pocketbase.PocketBase, model *CreateWebsiteInput) (*core
 	return record, nil
 }
 
-func GetWebsiteLastSnapshots(app *pocketbase.PocketBase, websiteId string, max int) ([]string, error) {
-	website, err := app.FindRecordById("competitors", websiteId)
-
-	if err != nil {
-		app.Logger().Error("[GetWebsiteHistory] cannot find website", "error", err)
-		return nil, err
-	}
-
-	externalId := website.GetString("external_id")
-	if externalId == "" {
-		app.Logger().Info("[GetWebsiteHistory] website has no external_id")
-		return nil, err
-	}
-
-	client, _ := cd.CreateChangeDetectionClient()
-
-	resp, err := client.GetWatchHistoryWithResponse(context.Background(), uuid.MustParse(externalId))
-	if err != nil {
-		app.Logger().Error("[GetWebsiteHistory] failed to get watch history", "error", err)
-		return nil, err
-	}
-
-	snapshots := cd.WatchHistory{}
-	if err := json.Unmarshal(resp.Body, &snapshots); err != nil {
-		app.Logger().Error("[GetWebsiteHistory] cannot unmarshal response", "error", err)
-		return nil, err
-	}
-
-	app.Logger().Debug("[GetWebsiteHistory] got snapshots", "snapshots", snapshots)
-
-	c := 0
-	history := []string{}
-	for snapshot, _ := range snapshots {
-		resp, _ := client.GetWatchSnapshotWithResponse(context.Background(), uuid.MustParse(externalId), snapshot, &cd.GetWatchSnapshotParams{})
-		history = append(history, string(resp.Body))
-
-		c = c + 1
-		if c >= max {
-			break
-		}
-	}
-
-	return history, nil
-}
-
 func FindCompetitorResources(app *pocketbase.PocketBase, competitorId string) ([]*core.Record, error) {
 	resources, err := app.FindRecordsByFilter(
 		"resources",
@@ -98,7 +49,7 @@ func FindCompetitorResources(app *pocketbase.PocketBase, competitorId string) ([
 		10,
 		0,
 		dbx.Params{"competitor": competitorId},
-		dbx.Params{"checked": time.Now().Add(24 * time.Hour).Format(time.RFC3339)},
+		dbx.Params{"checked": time.Now().Add(-24 * time.Hour).Format(time.RFC3339)},
 	)
 	if err != nil {
 		app.Logger().Error("[FindCompetitorResources] cannot fetch resources", "error", err)

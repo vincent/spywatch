@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-03T15:00:30.853Z\n"
-"PO-Revision-Date: 2025-11-22T00:45:32.259Z\n"
+"PO-Revision-Date: 2025-11-22T13:18:53.023Z\n"
 "Last-Translator: \n"
 "Language: en\n"
 "Language-Team: \n"
@@ -394,3 +394,55 @@ msgstr "Edit"
 #: src/routes/competitors/[id]/edit/+page.svelte
 msgid "Loading ..."
 msgstr "Loading ..."
+
+#: src/lib/components/Navbar.svelte
+msgid "Flowbite Logo"
+msgstr "Flowbite Logo"
+
+#: src/lib/components/Navbar.svelte
+msgid "Flowbite"
+msgstr "Flowbite"
+
+#: src/lib/components/Navbar.svelte
+msgid "Home"
+msgstr "Home"
+
+#: src/lib/components/Navbar.svelte
+msgid "Messages"
+msgstr "Messages"
+
+#: src/lib/components/Navbar.svelte
+msgid "Profile"
+msgstr "Profile"
+
+#: src/lib/components/Navbar.svelte
+msgid "Settings"
+msgstr "Settings"
+
+#: src/lib/components/Navbar.svelte
+msgid "Dropdown <0/>"
+msgstr "Dropdown <0/>"
+
+#: src/lib/components/Navbar.svelte
+msgid "Item 1"
+msgstr "Item 1"
+
+#: src/lib/components/Navbar.svelte
+msgid "Item 2"
+msgstr "Item 2"
+
+#: src/lib/components/Navbar.svelte
+msgid "Item 3"
+msgstr "Item 3"
+
+#: src/lib/components/Sidebar.svelte
+msgid "Main menu"
+msgstr "Main menu"
+
+#: src/lib/components/Sidebar.svelte
+msgid "Docs"
+msgstr "Docs"
+
+#: src/lib/components/Sidebar.svelte
+msgid "About"
+msgstr "About"

@@ -121,12 +121,9 @@ func main() {
 
 	// Custom hooks
 	services.BindBootstrapSMTPConfig(app)
-	services.BindAfterWebsiteCreateSuccessHook(app)
-	services.BindAfterWebsiteDeleteSuccessHook(app)
 
 	// Custom routes
 	pb_routes.RegisterConfigRoute(app, hooksDir)
-	pb_routes.RegisterWebsiteHistoryRoute(app)
 	pb_routes.RegisterCompetitorPreviewRoute(app)
 
 	// // Custom jobs

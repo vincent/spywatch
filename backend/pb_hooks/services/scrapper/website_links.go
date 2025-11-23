@@ -37,10 +37,12 @@ func GetLinksFromWebsite(url string) (WebsiteLinksResult, error) {
 	if err == nil {
 		title = p.Title
 		if len(p.Favicons) > 0 {
-			if strings.HasPrefix(p.Favicons[0].URL, base) {
+			if strings.HasPrefix(p.Favicons[0].URL, "//") {
+				logo = parsedUrl.Scheme + ":" + p.Favicons[0].URL
+			} else if strings.HasPrefix(p.Favicons[0].URL, "http") {
 				logo = p.Favicons[0].URL
 			} else {
-				logo = base + p.Favicons[0].URL
+				logo = base + "/" + p.Favicons[0].URL
 			}
 		}
 	}
@@ -52,17 +54,18 @@ func GetLinksFromWebsite(url string) (WebsiteLinksResult, error) {
 		return WebsiteLinksResult{}, err
 	}
 
-	// Split output into lines and filter out empty lines
-	lines := strings.Split(string(output), "\n")
+	lines := append(strings.Split(string(output), "\n"), url)
+
 	var ownLinks []string
 	var ownDic = make(map[string]bool)
 	var socialLinks []string
 	var socDic = make(map[string]bool)
 	var prefix = strings.Trim(url, "/")
+	var strict = false
 
 	for _, line := range lines {
 		link := strings.TrimSpace(line)
-		if link == "" || !strings.HasPrefix(link, prefix) || strings.Contains(link, "#") || strings.Contains(link, "rss") || strings.Contains(link, ".atom") {
+		if !strings.HasPrefix(link, "http") || strings.Contains(link, "#") || strings.Contains(link, "rss") || strings.Contains(link, ".atom") {
 			continue
 		}
 		if logo == "" && strings.Contains(link, "favicon") {
@@ -70,7 +73,7 @@ func GetLinksFromWebsite(url string) (WebsiteLinksResult, error) {
 		}
 		if isSocialNetworkLink(link) {
 			socialLinks = addLink(socDic, socialLinks, link)
-		} else {
+		} else if !strict || strings.HasPrefix(link, prefix) {
 			ownLinks = addLink(ownDic, ownLinks, link)
 		}
 	}
@@ -88,10 +91,14 @@ func GetLinksFromWebsite(url string) (WebsiteLinksResult, error) {
 
 func isSocialNetworkLink(link string) bool {
 	return strings.Contains(link, "facebook.com") ||
-		strings.Contains(link, "twitter.com") ||
+		strings.Contains(link, "tripadvisor.com") ||
 		strings.Contains(link, "instagram.com") ||
+		strings.Contains(link, "capterra.com/") ||
 		strings.Contains(link, "linkedin.com") ||
-		strings.Contains(link, "youtube.com")
+		strings.Contains(link, "twitter.com") ||
+		strings.Contains(link, "youtube.com") ||
+		strings.Contains(link, "//g.page/") ||
+		strings.Contains(link, "//x.com/")
 }
 
 func addLink(m map[string]bool, a []string, s string) []string {

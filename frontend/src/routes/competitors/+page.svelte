@@ -1,51 +1,51 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-	import { client } from "$lib/pocketbase";
-	import type { CompetitorsRecord } from "$lib/pocketbase/generated-types";
+	import { Breadcrumb, BreadcrumbItem, Button, Heading } from 'flowbite-svelte';
+	import { onMount, type Component } from 'svelte';
+	import { Plus } from '@lucide/svelte';
+	import type { CompetitorsRecord } from '$lib/pocketbase/generated-types';
+	import CompetitorDrawer from '$lib/components/CompetitorDrawer.svelte';
+	import DeleteDrawer from '$lib/components/DeleteDrawer.svelte';
+	import SiteTable from '$lib/components/SiteTable.svelte';
+	import { client } from '$lib/pocketbase';
+	
+	let open: boolean = $state(false);
+	let current_competitor: any = $state({});
+	let DrawerComponent: Component = $state(CompetitorDrawer);
 
-  let competitors = $state<CompetitorsRecord[]>();
-  onMount(async () => competitors = 
-    await client.collection('competitors').getFullList<CompetitorsRecord>()
-  )
+	const toggle = (component: Component) => {
+		DrawerComponent = component;
+		open = !open;
+	};
+
+	const competitors = client.collection('competitors');
+	let list = $state<CompetitorsRecord[]>([]);
+	async function afterUpdate() {
+		list = await competitors.getFullList<CompetitorsRecord>();
+	}
+	onMount(async () => {
+		afterUpdate()
+	});
 </script>
 
-<main class="min-h-screen bg-gray-50 py-10 px-4">
-  <div class="max-w-4xl mx-auto">
-    <header class="mb-10 text-center">
-      <h2 class="text-3xl font-extrabold text-gray-900 mb-2">Competitors to Watch</h2>
-      <p class="text-lg text-gray-600">Here is a selection of leading website change monitoring tools to keep an eye on:</p>
-    </header>
-    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-      {#each competitors as competitor}
-        <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-200 p-6 flex flex-col items-center">
-          {#if competitor.logo}
-            <img
-              class="w-16 h-16 object-contain mb-4"
-              src={competitor.logo}
-              alt={competitor.name + ' logo'}
-              on:error={() => { /* fallback if logo missing */ }}
-            />
-          {/if}
-          <div class="text-xl font-semibold text-gray-800 mb-2 text-center"><a href={competitor.url} target="_blank">{competitor.name}</a></div>
-          <div class="text-gray-600 text-base mb-4 text-center"><a href={competitor.url} target="_blank">{competitor.url}</a></div>
-          <div class="flex">
-            <a
-              class="mt-auto inline-block px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700 transition-colors duration-150"
-              href={`/competitors/${competitor.id}/edit`}
-              rel="noopener noreferrer"
-            >
-              Edit
-            </a>
-            <a
-              class="mt-auto inline-block px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700 transition-colors duration-150"
-              href={`/competitors/${competitor.id}`}
-              rel="noopener noreferrer"
-            >
-              History
-            </a>
-          </div>
-        </div>
-      {/each}
-    </div>
-  </div>
+<main class="relative h-full w-full overflow-y-auto bg-white dark:bg-gray-800">
+	<div class="p-4">
+		<Breadcrumb class="mb-5">
+			<BreadcrumbItem home>Home</BreadcrumbItem>
+			<BreadcrumbItem>Competitors</BreadcrumbItem>
+		</Breadcrumb>
+		<div class="flex justify-between">
+			<Heading tag="h3" class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white"
+				>All competitors</Heading
+			>
+			<Button onclick={() => ((current_competitor = {}), toggle(DrawerComponent))}><Plus /> Add new competitor watch</Button>
+		</div>
+	</div>
+
+	<SiteTable
+		competitors={list}
+		edit={(c: CompetitorsRecord) => ((current_competitor = c), toggle(DrawerComponent))}
+		remove={() => toggle(DeleteDrawer)}
+	/>
 </main>
+
+<DrawerComponent bind:open data={current_competitor} {afterUpdate} />
