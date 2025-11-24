@@ -1,20 +1,17 @@
 <script lang="ts">
-  import '../app.css';
-  import type { LayoutProps } from './$types';
-	import Navbar from '$lib/components/Navbar.svelte';
-	import Sidebar from '$lib/components/Sidebar.svelte';
+	import '../app.css';
+	import { page } from '$app/state';
+	import { client } from '$lib/pocketbase';
+	import { redirect } from '@sveltejs/kit';
 
-  let { children, data }: LayoutProps = $props();
-  let drawerHidden = $state(false);
+	let { children } = $props();
+
+	$effect.pre(() => {
+		if (client.authStore.isValid) return;
+		if (!page.url.href.startsWith('/auth')) {
+			redirect(301, '/auth/login');
+		}
+	});
 </script>
 
-<header class="fixed top-0 z-40 mx-auto w-full flex-none border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-800">
-  <Navbar bind:drawerHidden />
-</header>
-
-<div class="overflow-hidden lg:flex bg-white dark:bg-gray-800">
-  <Sidebar bind:drawerHidden />
-  <div class="relative h-full w-full overflow-y-auto pt-[70px] lg:ml-64">
-    {@render children()}
-  </div>
-</div>
+{@render children?.()}
