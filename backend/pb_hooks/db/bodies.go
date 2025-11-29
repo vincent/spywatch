@@ -41,27 +41,27 @@ func CreateWebsite(app *pocketbase.PocketBase, model *CreateWebsiteInput) (*core
 	return record, nil
 }
 
-func FindCompetitorResources(app *pocketbase.PocketBase, competitorId string) ([]*core.Record, error) {
+func FindBodiesResources(app *pocketbase.PocketBase, competitorId string) ([]*core.Record, error) {
 	resources, err := app.FindRecordsByFilter(
 		"resources",
-		"body = {:body} && checked <= {:checked}",
-		"-created",
+		"body = {:body} && url != '' && checked < {:checked}",
+		"created",
 		10,
 		0,
 		dbx.Params{"body": competitorId},
 		dbx.Params{"checked": time.Now().Add(-24 * time.Hour).Format(time.RFC3339)},
 	)
 	if err != nil {
-		app.Logger().Error("[FindCompetitorResources] cannot fetch resources", "error", err)
+		app.Logger().Error("[FindBodiesResources] cannot fetch resources", "error", err)
 		return nil, err
 	}
 	return resources, nil
 }
 
-func FindCompetitors(app *pocketbase.PocketBase) ([]*core.Record, error) {
+func FindBodies(app *pocketbase.PocketBase) ([]*core.Record, error) {
 	bodies, err := app.FindAllRecords("bodies")
 	if err != nil {
-		app.Logger().Error("[FindCompetitors] cannot fetch websites", "error", err)
+		app.Logger().Error("[FindBodies] cannot fetch websites", "error", err)
 		return nil, err
 	}
 	return bodies, nil

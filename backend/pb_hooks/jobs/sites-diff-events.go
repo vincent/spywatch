@@ -12,9 +12,9 @@ import (
 
 func RegisterDiffDescriptionsJob(app *pocketbase.PocketBase) {
 	app.Cron().MustAdd("DiffDescriptionsJob", "*/10 * * * *", func() {
-		websites, _ := db.FindCompetitors(app)
+		websites, _ := db.FindBodies(app)
 		for _, website := range websites {
-			resources, _ := db.FindCompetitorResources(app, website.Id)
+			resources, _ := db.FindBodiesResources(app, website.Id)
 			if len(resources) == 0 {
 				app.Logger().Debug("[DiffDescriptionsJob] no resources for body", "body", website.Id)
 			}
@@ -32,6 +32,9 @@ func CreateResourceSnapshot(app *pocketbase.PocketBase, resourceId string) error
 		app.Logger().Error("[CreateResourceSnapshot] cannot find resource", "error", err)
 		return nil
 	}
+
+	res.Set("checked", time.Now().Format(time.RFC3339))
+	app.Save(res)
 
 	url := res.GetString("url")
 	html, err := scrapper.FetchHTML(url)
@@ -93,9 +96,6 @@ func CreateResourceSnapshot(app *pocketbase.PocketBase, resourceId string) error
 			return err
 		}
 	}
-
-	res.Set("checked", time.Now().Format(time.RFC3339))
-	app.Save(res)
 
 	return nil
 }

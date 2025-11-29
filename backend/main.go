@@ -121,6 +121,7 @@ func main() {
 
 	// Custom hooks
 	services.BindBootstrapSMTPConfig(app)
+	services.BindBootstrapFiltersLists(app, hooksDir)
 
 	// Custom routes
 	pb_routes.RegisterConfigRoute(app, hooksDir)

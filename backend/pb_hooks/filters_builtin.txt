@@ -1,0 +1,6 @@
+[SpyWatch]
+! Title: 🛠️ SpyWatch filter List
+! Version: 29 November 2025
+! Syntax: AdBlock
+
+trustpilot.com##[class*='styles_carouselContainer__'], [class*='styles_trustpilotExperienceCardContainer__']
