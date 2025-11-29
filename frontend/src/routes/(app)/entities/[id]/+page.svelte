@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
+	import { Rss } from '@lucide/svelte';
 	import { client } from '$lib/pocketbase';
 	import type { BodiesRecord, SnapshotsRecord } from '$lib/pocketbase/generated-types';
 	import { Breadcrumb, BreadcrumbItem, Heading } from 'flowbite-svelte';
@@ -26,19 +27,19 @@
 		<Heading tag="h1" class="flex items-center text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">
 			<CompetitorLogo {body} />
 			{body.name}
+			<a class="ms-3" target="_blank" href={`/api/rss/${client.authStore.record?.api_key}/${body.id}`}><Rss/></a>
 		</Heading>
 	</div>
-
 	{#await history() }
 		<p>Loading history...</p>
-	{:then versions} 
-		{#if versions.length === 0}
+	{:then events} 
+		{#if events.length === 0}
 			<p>No history available.</p>
-		{:else if versions.length === 1}
+		{:else if events.length === 1}
 			<h3>First content</h3>
-			<pre>{versions[0].content}</pre>
+			<pre>{events[0].content}</pre>
 		{:else}
-			<EventsTimeline events={versions} />
+			<EventsTimeline {events} />
 		{/if}
 	{/await}
 </main>

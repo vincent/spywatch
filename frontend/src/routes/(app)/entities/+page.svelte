@@ -37,9 +37,9 @@
 		</Breadcrumb>
 		<div class="flex justify-between">
 			<Heading tag="h3" class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white"
-				>All bodies</Heading
+				>All entities</Heading
 			>
-			<Button onclick={() => ((current_competitor = {}), toggle(DrawerComponent))}><Plus /> Add new body watch</Button>
+			<Button onclick={() => ((current_competitor = {}), toggle(DrawerComponent))}><Plus /> Add new entity watch</Button>
 		</div>
 	</div>
 
