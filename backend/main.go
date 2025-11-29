@@ -125,6 +125,7 @@ func main() {
 	// Custom routes
 	pb_routes.RegisterConfigRoute(app, hooksDir)
 	pb_routes.RegisterCompetitorPreviewRoute(app)
+	pb_routes.RegisterReleaseRoute(app)
 
 	// // Custom jobs
 	jobs.RegisterDiffDescriptionsJob(app)

@@ -82,23 +82,23 @@ msgstr ""
 #~ msgid "Notes: <0/>"
 #~ msgstr ""
 
-#: src/routes/competitors/[id]/+page.svelte
+#: src/routes/entities/[id]/+page.svelte
 msgid "No history available."
 msgstr ""
 
-#: src/routes/competitors/[id]/+page.svelte
+#: src/routes/entities/[id]/+page.svelte
 msgid "First content"
 msgstr ""
 
-#: src/routes/competitors/[id]/+page.svelte
-#: src/routes/competitors/[id]/[eventId]/+page.svelte
-#: src/routes/competitors/[id]/diff/[eventId]/+page.svelte
+#: src/routes/entities/[id]/+page.svelte
+#: src/routes/entities/[id]/[eventId]/+page.svelte
+#: src/routes/entities/[id]/diff/[eventId]/+page.svelte
 msgid "Change History:"
 msgstr ""
 
-#: src/routes/competitors/[id]/+page.svelte
-#: src/routes/competitors/[id]/[eventId]/+page.svelte
-#: src/routes/competitors/[id]/diff/[eventId]/+page.svelte
+#: src/routes/entities/[id]/+page.svelte
+#: src/routes/entities/[id]/[eventId]/+page.svelte
+#: src/routes/entities/[id]/diff/[eventId]/+page.svelte
 msgid "Loading history..."
 msgstr ""
 
@@ -142,8 +142,8 @@ msgstr ""
 #~ msgid "Get started with dozens of web components and interactive elements built on top of Tailwind CSS."
 #~ msgstr ""
 
-#: src/routes/competitors/[id]/[eventId]/+page.svelte
-#: src/routes/competitors/[id]/diff/[eventId]/+page.svelte
+#: src/routes/entities/[id]/[eventId]/+page.svelte
+#: src/routes/entities/[id]/diff/[eventId]/+page.svelte
 msgid "No diff data"
 msgstr ""
 
@@ -152,10 +152,10 @@ msgid "SpyWatch"
 msgstr ""
 
 #: src/routes/+page.svelte
-msgid "Stay ahead of your competitors, effortlessly."
+msgid "Stay ahead of your bodies, effortlessly."
 msgstr ""
 
-#~ msgid "SpyWatch monitors your competitors' websites and notifies you of every change. Track pricing, new features, and more—automatically."
+#~ msgid "SpyWatch monitors your bodies' websites and notifies you of every change. Track pricing, new features, and more—automatically."
 #~ msgstr ""
 
 #: src/routes/+page.svelte
@@ -171,7 +171,7 @@ msgid "Automated Monitoring"
 msgstr ""
 
 #: src/routes/+page.svelte
-msgid "Get instant alerts when your competitors update their websites, launch new products, or change prices."
+msgid "Get instant alerts when your bodies update their websites, launch new products, or change prices."
 msgstr ""
 
 #: src/routes/+page.svelte
@@ -215,7 +215,7 @@ msgid "Create Your Free Account"
 msgstr ""
 
 #: src/routes/+page.svelte
-msgid "SpyWatch monitors your competitors' websites and notifies you of every change. Track pricing, new features and more, automatically."
+msgid "SpyWatch monitors your bodies' websites and notifies you of every change. Track pricing, new features and more, automatically."
 msgstr ""
 
 #: src/routes/login/+page.svelte
@@ -307,11 +307,11 @@ msgstr ""
 msgid "or sign up with"
 msgstr ""
 
-#: src/routes/competitors/+page.svelte
+#: src/routes/entities/+page.svelte
 msgid "Competitors to Watch"
 msgstr ""
 
-#: src/routes/competitors/+page.svelte
+#: src/routes/entities/+page.svelte
 msgid "Here is a selection of leading website change monitoring tools to keep an eye on:"
 msgstr ""
 
@@ -335,7 +335,7 @@ msgid "Competitor Form"
 msgstr ""
 
 #: src/lib/components/SiteForm.svelte
-msgid "Add or edit a competitor and manage their watched resources."
+msgid "Add or edit a body and manage their watched resources."
 msgstr ""
 
 #: src/lib/components/SiteForm.svelte
@@ -358,7 +358,7 @@ msgstr ""
 #~ msgid "Website"
 #~ msgstr ""
 
-#: src/routes/competitors/+page.svelte
+#: src/routes/entities/+page.svelte
 msgid "History"
 msgstr ""
 
@@ -366,7 +366,7 @@ msgstr ""
 msgid "Competitors Watch Report"
 msgstr ""
 
-#~ msgid "Stay ahead by tracking what your competitors are changing. See the latest updates, features, and announcements from leading website monitoring tools."
+#~ msgid "Stay ahead by tracking what your bodies are changing. See the latest updates, features, and announcements from leading website monitoring tools."
 #~ msgstr ""
 
 #~ msgid "Recent Updates"
@@ -379,15 +379,15 @@ msgstr ""
 
 #: src/routes/releases/+page.svelte
 msgid ""
-"Stay ahead by tracking what your competitors are changing. See the latest updates, features,\n"
+"Stay ahead by tracking what your bodies are changing. See the latest updates, features,\n"
 "and announcements from leading website monitoring tools."
 msgstr ""
 
-#: src/routes/competitors/+page.svelte
+#: src/routes/entities/+page.svelte
 msgid "Edit"
 msgstr ""
 
-#: src/routes/competitors/[id]/edit/+page.svelte
+#: src/routes/entities/[id]/edit/+page.svelte
 msgid "Loading ..."
 msgstr ""
 

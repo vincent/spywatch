@@ -16,10 +16,10 @@ type CreateWebsiteInput struct {
 	OwnerID    string
 }
 
-// CreateWebsite adds a new row to the competitors collection.
+// CreateWebsite adds a new row to the bodies collection.
 func CreateWebsite(app *pocketbase.PocketBase, model *CreateWebsiteInput) (*core.Record, error) {
 
-	collection, err := app.FindCollectionByNameOrId("competitors")
+	collection, err := app.FindCollectionByNameOrId("bodies")
 	if err != nil {
 		return nil, err
 	}
@@ -44,11 +44,11 @@ func CreateWebsite(app *pocketbase.PocketBase, model *CreateWebsiteInput) (*core
 func FindCompetitorResources(app *pocketbase.PocketBase, competitorId string) ([]*core.Record, error) {
 	resources, err := app.FindRecordsByFilter(
 		"resources",
-		"competitor = {:competitor} && checked <= {:checked}",
+		"body = {:body} && checked <= {:checked}",
 		"-created",
 		10,
 		0,
-		dbx.Params{"competitor": competitorId},
+		dbx.Params{"body": competitorId},
 		dbx.Params{"checked": time.Now().Add(-24 * time.Hour).Format(time.RFC3339)},
 	)
 	if err != nil {
@@ -59,12 +59,12 @@ func FindCompetitorResources(app *pocketbase.PocketBase, competitorId string) ([
 }
 
 func FindCompetitors(app *pocketbase.PocketBase) ([]*core.Record, error) {
-	competitors, err := app.FindAllRecords("competitors")
+	bodies, err := app.FindAllRecords("bodies")
 	if err != nil {
 		app.Logger().Error("[FindCompetitors] cannot fetch websites", "error", err)
 		return nil, err
 	}
-	return competitors, nil
+	return bodies, nil
 }
 
 var MAX_NARRATIVE_LENGTH = 100000

@@ -16,7 +16,7 @@ func RegisterDiffDescriptionsJob(app *pocketbase.PocketBase) {
 		for _, website := range websites {
 			resources, _ := db.FindCompetitorResources(app, website.Id)
 			if len(resources) == 0 {
-				app.Logger().Debug("[DiffDescriptionsJob] no resources for competitor", "competitor", website.Id)
+				app.Logger().Debug("[DiffDescriptionsJob] no resources for body", "body", website.Id)
 			}
 			for _, res := range resources {
 				CreateResourceSnapshot(app, res.Id)

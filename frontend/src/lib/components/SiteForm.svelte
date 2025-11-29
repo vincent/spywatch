@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { CompetitorsRecord, ResourcesRecord } from '$lib/pocketbase/generated-types';
+	import type { BodiesRecord, ResourcesRecord } from '$lib/pocketbase/generated-types';
 	import { Button, Input, Label } from 'flowbite-svelte';
 	import { CloseOutline } from 'flowbite-svelte-icons';
 	import { DraftingCompass } from '@lucide/svelte';
@@ -13,14 +13,14 @@
 	let selectedResources = $state<Record<string, boolean>>({});
 
 	const db = {
-		competitors: client.collection('competitors'),
+		bodies: client.collection('bodies'),
 		resources: client.collection('resources'),
 	}
 
 	onMount(async () => {
 		if (!data.id) return;
-		data = await db.competitors.getOne<CompetitorsRecord>(data.id as string);
-		resources = await db.resources.getFullList({ filter: `url!='' && competitor='${data.id}'` })
+		data = await db.bodies.getOne<BodiesRecord>(data.id as string);
+		resources = await db.resources.getFullList({ filter: `url!='' && body='${data.id}'` })
 		selectedResources = resources.reduce((acc, r) => ({ ...acc, [`${r.url}`]: true }), {});
 	});
 
@@ -64,13 +64,13 @@
 		}
 
 		if (!data.id) {
-			data = await client.collection('competitors').create({
+			data = await client.collection('bodies').create({
 				owner: client.authStore.record?.id,
 				found_resources: resources.map((r) => r.url).join('###'),
 				...data
 			});
 		} else {
-			data = await client.collection('competitors').update(data.id, {
+			data = await client.collection('bodies').update(data.id, {
 				found_resources: resources.map((r) => r.url).join('###'),
 				...data
 			});
@@ -83,7 +83,7 @@
 		for (let index = 0; index < toInsert.length; index++) {
 			const url = toInsert[index];
 			await client.collection('resources').create<ResourcesRecord>({
-				competitor: data.id,
+				body: data.id,
 				url
 			});
 		}
@@ -100,7 +100,7 @@
 			<Input
 				name="url"
 				class="border font-normal outline-none mt-2"
-				placeholder="https://competitor.com"
+				placeholder="https://body.com"
 				bind:value={data.url}
 				onchange={reset}
 				type="url"
@@ -156,8 +156,8 @@
 			{#if resources.length}
 				<Button type="submit" class="w-full">
 					{data && data.id
-						? 'Update competitor'
-						: 'Add competitor'}
+						? 'Update body'
+						: 'Add body'}
 				</Button>
 			{/if}
 			<Button color="alternative" class="w-full" onclick={() => (open = false)}>

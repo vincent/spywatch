@@ -7,20 +7,20 @@
 	import MonthNavigator, { DEFAULT_BOUNDS } from '$lib/components/MonthNavigator.svelte';
 
 	const dfm = Intl.DateTimeFormat(navigator.language, { month: 'long', year: 'numeric' });
-	let competitors = $state<CompetitorWithChanges[]>();
+	let bodies = $state<CompetitorWithChanges[]>();
 	let bounds = $state(DEFAULT_BOUNDS)
 
 	const fetchSnapshots = (bounds: { min: Date; max: Date }) => {
 		return client
 			.collection('snapshots')
 			.getFullList<SnapshotsRecord & { expand: any }>({
-				fields: 'competitor,narrative,created,expand',
+				fields: 'body,narrative,created,expand',
 				filter: `narrative!='' && created>='${bounds.min.toISOString()}' && created<='${bounds.max.toISOString()}'`,
-				expand: 'resource.competitor'
+				expand: 'resource.body'
 			})
 			.then((snapshots) => {
 				const merged = snapshots.reduce((acc, { created, narrative, expand }) => {
-					const { id: cid, name, url, logo } = expand.resource.expand.competitor;
+					const { id: cid, name, url, logo } = expand.resource.expand.body;
 					const { url: rurl } = expand.resource;
 					if (!acc[cid]) acc[cid] = { id: cid, name, url, logo };
 					acc[cid].changes = (acc[cid].changes || []).concat({
@@ -30,7 +30,7 @@
 					});
 					return acc;
 				}, {} as any);
-				competitors = Object.values(merged);
+				bodies = Object.values(merged);
 			});
 	};
 
@@ -53,5 +53,5 @@
 		</div>
 	</div>
 
-	<Release {competitors} />
+	<Release {bodies} />
 </main>

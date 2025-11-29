@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { Button, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
-	import type { CompetitorsResponse } from '$lib/pocketbase/generated-types';
+	import type { BodiesResponse } from '$lib/pocketbase/generated-types';
 	import { EditOutline, TrashBinSolid } from 'flowbite-svelte-icons';
 	import CompetitorLogo from './CompetitorLogo.svelte';
 	
 	type Props = {
-		competitors: CompetitorsResponse[],
+		bodies: BodiesResponse[],
 		edit: CallableFunction,
 		remove: CallableFunction
 	}
-	let { competitors, edit, remove }: Props = $props();
+	let { bodies, edit, remove }: Props = $props();
 </script>
 
 <Table>
@@ -20,26 +20,26 @@
 		<TableHeadCell class="ps-4 font-normal"></TableHeadCell>
 	</TableHead>
 	<TableBody>
-		{#each competitors as competitor}
+		{#each bodies as body}
 			<TableBodyRow class="text-base">
 				<TableBodyCell class="space-x-6 p-4 whitespace-nowrap">
 					<div class="text-sm font-normal text-gray-500 dark:text-gray-300">
 						<div class="flex text-base font-semibold text-gray-900 dark:text-white">
-							<CompetitorLogo {competitor} />
-							<a href={`/competitors/${competitor.id}`}>{competitor.name}</a>
+							<CompetitorLogo {body} />
+							<a href={`/entities/${body.id}`}>{body.name}</a>
 						</div>
 					</div>
 				</TableBodyCell>
 				<TableBodyCell class="p-4"
-					><a href={competitor.url} target="_blank">{competitor.url}</a></TableBodyCell
+					><a href={body.url} target="_blank">{body.url}</a></TableBodyCell
 				>
-				<TableBodyCell class="p-4">{(competitor.expand as any)?.workspace?.name}</TableBodyCell>
+				<TableBodyCell class="p-4">{(body.expand as any)?.workspace?.name}</TableBodyCell>
 				<TableBodyCell class="space-x-2 text-right">
 					<Button
 						size="sm"
 						class="gap-2 px-3"
 						outline
-						onclick={() => edit(competitor)}
+						onclick={() => edit(body)}
 					>
 						<EditOutline size="sm" /> Update
 					</Button>
@@ -47,7 +47,7 @@
 						color="red"
 						size="sm"
 						class="gap-2 px-3"
-						onclick={() => remove(competitor)}
+						onclick={() => remove(body)}
 					>
 						<TrashBinSolid size="sm" />
 					</Button>

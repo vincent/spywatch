@@ -1,7 +1,7 @@
 <script lang="ts">
 	import UserAvatarForm from '$lib/components/UserAvatarForm.svelte';
 	import { client } from '$lib/pocketbase';
-  import { Breadcrumb, BreadcrumbItem, Heading } from 'flowbite-svelte';
+    import { Breadcrumb, BreadcrumbItem, Heading } from 'flowbite-svelte';
 </script>
 
 <main class="p-4">

@@ -36,7 +36,7 @@ func RegisterCompetitorPreviewRoute(app *pocketbase.PocketBase) {
 			}
 
 			if false {
-				smartLinksResponse := ai.SimpleAIRequestAsJSON("You are a market analyser. here are all links from my competitor website. which links seem interesting to me ? keep similar (but not duplicates) links, ignore any system or technical links, categorize useful social networks links separately. give me only the lists, in json form { socialNetworks: [], ownLinks: [] }. ---- " + strings.Join(rc.SocialNetworks, "\n") + "" + strings.Join(rc.OwnLinks, "\n"))
+				smartLinksResponse := ai.SimpleAIRequestAsJSON("You are a market analyser. here are all links from my body website. which links seem interesting to me ? keep similar (but not duplicates) links, ignore any system or technical links, categorize useful social networks links separately. give me only the lists, in json form { socialNetworks: [], ownLinks: [] }. ---- " + strings.Join(rc.SocialNetworks, "\n") + "" + strings.Join(rc.OwnLinks, "\n"))
 				app.Logger().Info("[PostCompetitorPreview] smartLinks", "smartLinks", smartLinksResponse)
 
 				if err := json.Unmarshal(([]byte)(smartLinksResponse), &rc); err != nil {

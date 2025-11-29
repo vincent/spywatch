@@ -16,7 +16,7 @@
 			<p class="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
 				{e.narrative}
 			</p>
-			<Button color="alternative" href={`/competitors/${e.resource}/diff/${e.id}`}
+			<Button color="alternative" href={`/entities/${e.resource}/diff/${e.id}`}
 				>Learn more<ArrowRightOutline class="ms-2 h-5 w-5" /></Button
 			>
 		</TimelineItem>

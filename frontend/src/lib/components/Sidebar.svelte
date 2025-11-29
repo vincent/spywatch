@@ -30,7 +30,7 @@
   });
 
   let items = [
-    { name: 'Competitors', Icon: ChartPieOutline, href: '/competitors' },
+    { name: 'Entities', Icon: ChartPieOutline, href: '/entities' },
     { name: 'Releases', Icon: Newspaper, href: '/releases' },
     { name: 'Settings', Icon: CogOutline, href: '/settings' },
   ];

@@ -16,6 +16,7 @@ require (
 	github.com/dop251/goja v0.0.0-20250309171923-bcd7cc6bf64c // indirect
 	github.com/go-sql-driver/mysql v1.9.1 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
+	github.com/gorilla/feeds v1.2.0 // indirect
 	github.com/k3a/html2text v1.2.1 // indirect
 	golang.org/x/exp v0.0.0-20250408133849-7e4ce0ab07d0 // indirect
 )

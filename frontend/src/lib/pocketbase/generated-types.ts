@@ -11,7 +11,7 @@ export enum Collections {
 	Mfas = "_mfas",
 	Otps = "_otps",
 	Superusers = "_superusers",
-	Competitors = "competitors",
+	Bodies = "bodies",
 	Resources = "resources",
 	Snapshots = "snapshots",
 	Users = "users",
@@ -94,9 +94,8 @@ export type SuperusersRecord = {
 	verified?: boolean
 }
 
-export type CompetitorsRecord = {
+export type BodiesRecord = {
 	created?: IsoDateString
-	external_id?: string
 	found_resources?: string
 	id: string
 	logo?: string
@@ -108,8 +107,8 @@ export type CompetitorsRecord = {
 }
 
 export type ResourcesRecord = {
+	body?: RecordIdString
 	checked?: IsoDateString
-	competitor?: RecordIdString
 	created?: IsoDateString
 	id: string
 	updated?: IsoDateString
@@ -127,6 +126,7 @@ export type SnapshotsRecord = {
 }
 
 export type UsersRecord = {
+	api_key?: string
 	avatar?: string
 	created?: IsoDateString
 	email: string
@@ -137,12 +137,13 @@ export type UsersRecord = {
 	tokenKey: string
 	updated?: IsoDateString
 	verified?: boolean
+	workspaces?: RecordIdString[]
 }
 
 export type WorkspacesRecord = {
 	created?: IsoDateString
 	id: string
-	name?: string
+	name: string
 	updated?: IsoDateString
 }
 
@@ -152,7 +153,7 @@ export type ExternalauthsResponse<Texpand = unknown> = Required<ExternalauthsRec
 export type MfasResponse<Texpand = unknown> = Required<MfasRecord> & BaseSystemFields<Texpand>
 export type OtpsResponse<Texpand = unknown> = Required<OtpsRecord> & BaseSystemFields<Texpand>
 export type SuperusersResponse<Texpand = unknown> = Required<SuperusersRecord> & AuthSystemFields<Texpand>
-export type CompetitorsResponse<Texpand = unknown> = Required<CompetitorsRecord> & BaseSystemFields<Texpand>
+export type BodiesResponse<Texpand = unknown> = Required<BodiesRecord> & BaseSystemFields<Texpand>
 export type ResourcesResponse<Texpand = unknown> = Required<ResourcesRecord> & BaseSystemFields<Texpand>
 export type SnapshotsResponse<Texpand = unknown> = Required<SnapshotsRecord> & BaseSystemFields<Texpand>
 export type UsersResponse<Texpand = unknown> = Required<UsersRecord> & AuthSystemFields<Texpand>
@@ -166,7 +167,7 @@ export type CollectionRecords = {
 	_mfas: MfasRecord
 	_otps: OtpsRecord
 	_superusers: SuperusersRecord
-	competitors: CompetitorsRecord
+	bodies: BodiesRecord
 	resources: ResourcesRecord
 	snapshots: SnapshotsRecord
 	users: UsersRecord
@@ -179,7 +180,7 @@ export type CollectionResponses = {
 	_mfas: MfasResponse
 	_otps: OtpsResponse
 	_superusers: SuperusersResponse
-	competitors: CompetitorsResponse
+	bodies: BodiesResponse
 	resources: ResourcesResponse
 	snapshots: SnapshotsResponse
 	users: UsersResponse
@@ -195,7 +196,7 @@ export type TypedPocketBase = PocketBase & {
 	collection(idOrName: '_mfas'): RecordService<MfasResponse>
 	collection(idOrName: '_otps'): RecordService<OtpsResponse>
 	collection(idOrName: '_superusers'): RecordService<SuperusersResponse>
-	collection(idOrName: 'competitors'): RecordService<CompetitorsResponse>
+	collection(idOrName: 'bodies'): RecordService<BodiesResponse>
 	collection(idOrName: 'resources'): RecordService<ResourcesResponse>
 	collection(idOrName: 'snapshots'): RecordService<SnapshotsResponse>
 	collection(idOrName: 'users'): RecordService<UsersResponse>
