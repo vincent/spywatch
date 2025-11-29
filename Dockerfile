@@ -19,7 +19,7 @@ RUN go build -o pocketbase .
 FROM debian:bookworm-slim
 
 # Install any runtime dependencies (if needed)
-RUN apt-get update && apt-get install -y ca-certificates debian-keyring debian-archive-keyring apt-transport-https curl gpg
+RUN apt-get update && apt-get install -y ca-certificates debian-keyring debian-archive-keyring apt-transport-https curl gpg lynx
 
 # Create directories
 WORKDIR /srv/spywatch/

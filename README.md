@@ -2,16 +2,7 @@
 
 <div align="center">
 
-Manage your chores, assign to other users, get notified.
-
-<p float="left" align="middle">
-<img width="220" alt="Rooms screenshot" src="https://github.com/vincent/spywatch/blob/main/assets/screenshot5.png?raw=true">
-<img width="220" alt="Chore form screenshot" src="https://github.com/vincent/spywatch/blob/main/assets/screenshot6.png?raw=true">
-<img width="220" alt="Members screenshot" src="https://github.com/vincent/spywatch/blob/main/assets/screenshot4.png?raw=true">
-<img width="220" alt="Home screenshot" src="https://github.com/vincent/spywatch/blob/main/assets/screenshot1.png?raw=true">
-<img width="220" alt="Rooms screenshot" src="https://github.com/vincent/spywatch/blob/main/assets/screenshot2.png?raw=true">
-<img width="220" alt="Notification screenshot" src="https://github.com/vincent/spywatch/blob/main/assets/screenshot3.png?raw=true">
-</p>
+Keep track of updates on webpages.
 
 [![Static Badge](https://img.shields.io/badge/Svelte_5-ff6c47?style=for-the-badge)](https://svelte.dev)
 [![Static Badge](https://img.shields.io/badge/Docker-1D63ED?style=for-the-badge)](https://www.docker.com)
@@ -19,22 +10,7 @@ Manage your chores, assign to other users, get notified.
 
 </div>
 
-## 📦 Features
-
-- Manage different households
-- Manage different rooms
-- Invite users
-- Add tasks to a room, with a frequency and assigned users
-- Users get notified until task is done
-- Admins get notified when task is done
-
-## ⚡ Notifications
-
-> Notifications are sent only via webpush for now, it could evolve in the future.
-
-#### Web push
-You'll need to generate VAPID keys, for example using [this tool online](https://www.stephane-quantin.com/en/tools/generators/vapid-keys) or the [provided go script](https://github.com/vincent/spywatch/blob/main/backend/scripts/generate-vapid-keys/main.go)
-
+...
 
 ## 🐳 Selfhosting
 
