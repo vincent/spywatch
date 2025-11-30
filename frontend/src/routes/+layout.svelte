@@ -8,7 +8,8 @@
 
 	$effect.pre(() => {
 		if (client.authStore.isValid) return;
-		if (!page.url.href.startsWith('/auth')) {
+		debugger;
+		if (!page.url.pathname.startsWith('/auth')) {
 			redirect(301, '/auth/login');
 		}
 	});
