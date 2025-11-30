@@ -41,7 +41,7 @@
 						outline
 						onclick={() => edit(body)}
 					>
-						<EditOutline size="sm" /> Update
+						<EditOutline size="sm" /> Edit
 					</Button>
 					<Button
 						color="red"

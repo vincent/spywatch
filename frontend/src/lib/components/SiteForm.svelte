@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { BodiesRecord, ResourcesRecord } from '$lib/pocketbase/generated-types';
-	import { Button, Input, Label } from 'flowbite-svelte';
+	import { Button, Checkbox, Input, Label } from 'flowbite-svelte';
 	import { CloseOutline } from 'flowbite-svelte-icons';
 	import { DraftingCompass } from '@lucide/svelte';
 	import { client } from '$lib/pocketbase';
@@ -20,8 +20,10 @@
 	onMount(async () => {
 		if (!data.id) return;
 		data = await db.bodies.getOne<BodiesRecord>(data.id as string);
-		resources = await db.resources.getFullList({ filter: `url!='' && body='${data.id}'` })
-		selectedResources = resources.reduce((acc, r) => ({ ...acc, [`${r.url}`]: true }), {});
+		resources = (await db.resources.getFullList({ filter: `url!='' && body='${data.id}'` }))
+		resources = resources.concat(data.found_resources.split('###').map((url: string) => resources.find((r) => r.url === url) ?? { id: '', url }))
+		
+		selectedResources = resources.reduce((acc, r) => ({ ...acc, [`${r.url}`]: !!r.id }), {});
 	});
 
 	function reset() {
@@ -81,10 +83,10 @@
 			.map(([u]) => resources.find(r => (r.url as string) === u));
 
 		for (let index = 0; index < toInsert.length; index++) {
-			const url = toInsert[index];
+			const res = toInsert[index];
 			await client.collection('resources').create<ResourcesRecord>({
 				body: data.id,
-				url
+				...res
 			});
 		}
 
@@ -132,21 +134,19 @@
 		{#if resources.length}
 			<Label class="space-y-2">
 				<span> Watched resources </span>
-				<div class="space-y-2 ps-4 mt-2">
-					{#each resources as res}
-						<div class="flex items-center space-x-2">
-							<Label>
-								<input
-									type="checkbox"
-									bind:checked={selectedResources[res.url as string]}
-									class="form-checkbox h-4 w-4 me-1 text-blue-600 border-gray-300 rounded"
-								/>
-								{res.url}
-							</Label>
-						</div>
-					{/each}
-				</div>
 			</Label>
+			<div class="space-y-2 ps-4 mt-2">
+				{#each resources as res}
+					<div class="flex items-center space-x-2">
+						<Label>
+							<Checkbox
+								bind:checked={selectedResources[res.url as string]}
+							/>
+							{res.url}
+						</Label>
+					</div>
+				{/each}
+			</div>
 		{/if}
 		<div class="bottom-0 left-0 flex w-full justify-center space-x-4 pb-4 md:px-4 mt-10">
 			<Button type="button" onclick={preview} outline={!!resources.length}>

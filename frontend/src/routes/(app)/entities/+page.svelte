@@ -39,13 +39,13 @@
 			<Heading tag="h3" class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white"
 				>All entities</Heading
 			>
-			<Button onclick={() => ((current_competitor = {}), toggle(DrawerComponent))}><Plus /> Add new entity watch</Button>
+			<Button onclick={() => ((current_competitor = {}), toggle(CompetitorDrawer))}><Plus /> Add new entity watch</Button>
 		</div>
 	</div>
 
 	<SiteTable
 		bodies={list}
-		edit={(c: BodiesResponse) => ((current_competitor = c), toggle(DrawerComponent))}
+		edit={(c: BodiesResponse) => ((current_competitor = c), toggle(CompetitorDrawer))}
 		remove={() => toggle(DeleteDrawer)}
 	/>
 </main>

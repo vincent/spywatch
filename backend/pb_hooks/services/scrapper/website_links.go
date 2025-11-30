@@ -3,6 +3,7 @@ package scrapper
 import (
 	neturl "net/url"
 	"os/exec"
+	"slices"
 	"strings"
 
 	metaparser "github.com/ammit/go-metaparser"
@@ -104,7 +105,7 @@ func categorizeLinks(lines []string, url string) (ownLinks, socialLinks []string
 	logo = ""
 
 	for _, line := range lines {
-		link := strings.TrimSpace(line)
+		link := strings.TrimRight(line, "/#")
 		if !strings.HasPrefix(link, "http") || strings.Contains(link, "#") || strings.Contains(link, "rss") || strings.Contains(link, ".atom") {
 			continue
 		}
@@ -118,6 +119,10 @@ func categorizeLinks(lines []string, url string) (ownLinks, socialLinks []string
 			ownLinks = addLink(ownDic, ownLinks, link)
 		}
 	}
+
+	slices.Sort(ownLinks)
+	slices.Sort(socialLinks)
+
 	return
 }
 

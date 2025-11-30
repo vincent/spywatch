@@ -2,13 +2,15 @@
   import { Label, Input } from 'flowbite-svelte';
 	import SignUp from '$lib/components/SignUp.svelte';
 	import MetaTag from '$lib/components/MetaTag.svelte';
+	import { client } from '$lib/pocketbase';
+	import { goto } from '$app/navigation';
 	
   const title = 'Create a Free Account';
   const site = {
-    name: 'Flowbite',
-    img: '/images/flowbite-svelte-icon-logo.svg',
+    name: 'SpyWatch',
+    img: '/images/favicon.svg',
     link: '/',
-    imgAlt: 'FlowBite Logo'
+    imgAlt: 'Logo'
   };
   const acceptTerms = true;
   const haveAccount = true;
@@ -25,12 +27,13 @@
       const [key, value] = field;
       data[key] = value;
     }
-    console.log(data);
+
+    client.collection("users").create(data).then(() => goto("/entities"))
   };
 
   const path: string = '/authentication/sign-up';
-  const description: string = 'Sign up example - Flowbite Svelte Admin Dashboard';
-  const metaTitle: string = 'Flowbite Svelte Admin Dashboard - Sign up';
+  const description: string = 'Sign up - SpyWatch';
+  const metaTitle: string = 'SpyWatch - Sign up';
   const subtitle: string = 'Sign up';
 </script>
 
