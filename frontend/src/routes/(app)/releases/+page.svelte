@@ -5,17 +5,19 @@
 	import { client } from '$lib/pocketbase';
 	import Release from '$lib/components/Release.svelte';
 	import MonthNavigator, { DEFAULT_BOUNDS } from '$lib/components/MonthNavigator.svelte';
+	import WorkspaceSelector from '$lib/components/WorkspaceSelector.svelte';
 
 	const dfm = Intl.DateTimeFormat(navigator.language, { month: 'long', year: 'numeric' });
 	let bodies = $state<CompetitorWithChanges[]>();
 	let bounds = $state(DEFAULT_BOUNDS)
+	let workspace = $state('')
 
-	const fetchSnapshots = (bounds: { min: Date; max: Date }) => {
+	const fetchSnapshots = (workspace: string, bounds: { min: Date; max: Date }) => {
 		return client
 			.collection('snapshots')
 			.getFullList<SnapshotsRecord & { expand: any }>({
 				fields: 'body,narrative,created,expand',
-				filter: `narrative!='' && created>='${bounds.min.toISOString()}' && created<='${bounds.max.toISOString()}'`,
+				filter: `narrative!='' && created>='${bounds.min.toISOString()}' && created<='${bounds.max.toISOString()}' ${workspace ? `&& resource.body.workspace='${workspace}'` : '' }`,
 				expand: 'resource.body'
 			})
 			.then((snapshots) => {
@@ -35,7 +37,7 @@
 	};
 
 	$effect(() => {
-		fetchSnapshots(bounds);
+		fetchSnapshots(workspace, bounds);
 	});
 </script>
 
@@ -45,10 +47,15 @@
 			<BreadcrumbItem home>Home</BreadcrumbItem>
 			<BreadcrumbItem>Releases</BreadcrumbItem>
 		</Breadcrumb>
-		<div class="flex justify-between">
+		<div class="flex justify-between items-center">
 			<Heading tag="h3" class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">
 				Releases - {dfm.format(bounds.max)}
 			</Heading>
+			<WorkspaceSelector
+				className="w-50 ms-5 me-auto pt-6"
+				bind:value={workspace}
+				none={"Any workspace"}
+			/>
 			<MonthNavigator bind:bounds={bounds} />
 		</div>
 	</div>

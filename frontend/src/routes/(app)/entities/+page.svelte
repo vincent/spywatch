@@ -7,9 +7,11 @@
 	import DeleteDrawer from '$lib/components/DeleteDrawer.svelte';
 	import SiteTable from '$lib/components/SiteTable.svelte';
 	import { client } from '$lib/pocketbase';
+	import WorkspaceSelector from '$lib/components/WorkspaceSelector.svelte';
 	
 	let open: boolean = $state(false);
-	let current_competitor: any = $state({});
+	let current_workspace = $state('');
+	let current_competitor = $state({});
 	let DrawerComponent: Component = $state(CompetitorDrawer);
 
 	const toggle = (component: Component) => {
@@ -21,10 +23,11 @@
 	let list = $state<BodiesResponse[]>([]);
 	async function afterUpdate() {
 		list = await bodies.getFullList<BodiesResponse>({
+			filter: current_workspace ? `workspace='${current_workspace}'` : undefined,
 			expand: 'workspace'
 		});
 	}
-	onMount(async () => {
+	$effect(() => {
 		afterUpdate()
 	});
 </script>
@@ -35,10 +38,15 @@
 			<BreadcrumbItem home>Home</BreadcrumbItem>
 			<BreadcrumbItem>Entities</BreadcrumbItem>
 		</Breadcrumb>
-		<div class="flex justify-between">
+		<div class="flex justify-between items-center">
 			<Heading tag="h3" class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white"
 				>All entities</Heading
 			>
+			<WorkspaceSelector
+				className="w-50 ms-5 me-auto pt-6"
+				bind:value={current_workspace}
+				none={"Any workspace"}
+			/>
 			<Button onclick={() => ((current_competitor = {}), toggle(CompetitorDrawer))}><Plus /> Add new entity watch</Button>
 		</div>
 	</div>

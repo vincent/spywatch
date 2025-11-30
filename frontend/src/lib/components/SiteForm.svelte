@@ -112,7 +112,11 @@
 		{#if data.url}
 			<Label class="space-y-2">
 				<span>Workspace</span>
-				<WorkspaceSelector bind:value={data.workspace} afterCreate={(workspace: string) => (data = {...data, workspace})} />
+				<WorkspaceSelector
+					bind:value={data.workspace}
+					create
+					afterCreate={(workspace: string) => (data = {...data, workspace})}
+				/>
 			</Label>
 			<Label class="space-y-2">
 				<span> Name </span>
