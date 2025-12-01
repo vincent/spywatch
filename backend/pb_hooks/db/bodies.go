@@ -1,6 +1,8 @@
 package db
 
 import (
+	"os"
+	"strconv"
 	"time"
 
 	"github.com/pocketbase/dbx"
@@ -42,6 +44,11 @@ func CreateWebsite(app *pocketbase.PocketBase, model *CreateWebsiteInput) (*core
 }
 
 func FindBodiesResources(app *pocketbase.PocketBase, competitorId string) ([]*core.Record, error) {
+	backStr := os.Getenv("SPYWATCH_REFETCH_HOURS")
+	back, err := strconv.Atoi(backStr)
+	if err != nil || back <= 0 {
+		back = 24
+	}
 	resources, err := app.FindRecordsByFilter(
 		"resources",
 		"body = {:body} && url != '' && checked < {:checked}",
@@ -49,7 +56,7 @@ func FindBodiesResources(app *pocketbase.PocketBase, competitorId string) ([]*co
 		10,
 		0,
 		dbx.Params{"body": competitorId},
-		dbx.Params{"checked": time.Now().Add(-24 * time.Hour).Format(time.RFC3339)},
+		dbx.Params{"checked": time.Now().Add(-1 * time.Duration(back) * time.Hour).Format(time.RFC3339)},
 	)
 	if err != nil {
 		app.Logger().Error("[FindBodiesResources] cannot fetch resources", "error", err)
