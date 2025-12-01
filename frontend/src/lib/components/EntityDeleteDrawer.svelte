@@ -2,16 +2,26 @@
   import { Button, CloseButton, Heading, Drawer } from 'flowbite-svelte';
   import { ExclamationCircleOutline } from 'flowbite-svelte-icons';
 	import type { DeleteDrawerProps } from './types';
+	import { client } from '$lib/pocketbase';
 
   let {
     open = $bindable(false),
+    data = undefined,
+    callback = null,
     title = 'Delete item',
     confirm = 'Are you sure you want to delete this?',
     yes = "Yes, I'm sure",
     no = 'No, cancel',
     headingTag = 'h5',
     headingClass = 'mb-6 text-sm font-semibold uppercase'
-  }: DeleteDrawerProps = $props();
+  }: DeleteDrawerProps & { data?: any, callback?: any } = $props();
+
+  function onDelete() {
+    client.collection("bodies").delete(data.id).then(() => {
+      callback?.();
+      open = false;
+    })
+  }
 </script>
 
 <Drawer placement="right" bind:open>
@@ -20,11 +30,12 @@
   {/if}
   <CloseButton onclick={() => (open = false)} class="absolute top-2.5 right-2.5 text-gray-400 hover:text-black dark:text-white" />
 
-  <ExclamationCircleOutline class="mt-8 mb-4 h-10 w-10 text-red-600" />
+  <div class="mb-4 flex justify-between items-center">
+    <ExclamationCircleOutline class="h-10 w-10 text-red-600" />
+    <h3 class="ms-2 text-lg text-gray-500 dark:text-gray-300">{confirm}</h3>
+  </div>
 
-  <h3 class="mb-6 text-lg text-gray-500 dark:text-gray-300">{confirm}</h3>
-
-  <Button href="/" color="red" class="mr-2">{yes}</Button>
+  <Button href="/" color="red" class="mr-2" onclick={()=> onDelete?.()}>{yes}</Button>
   <Button color="alternative" onclick={() => (open = false)}>{no}</Button>
 </Drawer>
 

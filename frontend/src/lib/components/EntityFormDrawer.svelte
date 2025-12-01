@@ -2,7 +2,7 @@
 	import { Heading, Drawer } from 'flowbite-svelte';
 	import SiteForm from './SiteForm.svelte';
 
-	let { open = $bindable(false), afterUpdate = null, data = {} } = $props();
+	let { open = $bindable(false), callback = null, data = {} } = $props();
 	let title = $derived(data.id ? 'Edit body' : 'Add new entity');
 </script>
 
@@ -11,5 +11,5 @@
 		{title || (data.id ? 'Edit body' : 'Add new entity')}
 	</Heading>
 
-    <SiteForm {data} {afterUpdate} bind:open />
+    <SiteForm {data} afterUpdate={callback} bind:open />
 </Drawer>

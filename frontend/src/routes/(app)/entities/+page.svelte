@@ -1,18 +1,18 @@
 <script lang="ts">
-	import { Breadcrumb, BreadcrumbItem, Button, Heading } from 'flowbite-svelte';
-	import { onMount, type Component } from 'svelte';
 	import { Plus } from '@lucide/svelte';
-	import type { BodiesResponse } from '$lib/pocketbase/generated-types';
-	import CompetitorDrawer from '$lib/components/CompetitorDrawer.svelte';
-	import DeleteDrawer from '$lib/components/DeleteDrawer.svelte';
-	import SiteTable from '$lib/components/SiteTable.svelte';
+	import { type Component } from 'svelte';
 	import { client } from '$lib/pocketbase';
+	import { Breadcrumb, BreadcrumbItem, Button, Heading } from 'flowbite-svelte';
+	import EntityDeleteDrawer from '$lib/components/EntityDeleteDrawer.svelte';
 	import WorkspaceSelector from '$lib/components/WorkspaceSelector.svelte';
+	import EntityFormDrawer from '$lib/components/EntityFormDrawer.svelte';
+	import type { BodiesResponse } from '$lib/pocketbase/generated-types';
+	import SiteTable from '$lib/components/SiteTable.svelte';
 	
+	let DrawerComponent: Component = $state(EntityFormDrawer);
 	let open: boolean = $state(false);
-	let current_workspace = $state('');
-	let current_competitor = $state({});
-	let DrawerComponent: Component = $state(CompetitorDrawer);
+	let workspace = $state('');
+	let entity = $state({});
 
 	const toggle = (component: Component) => {
 		DrawerComponent = component;
@@ -23,7 +23,7 @@
 	let list = $state<BodiesResponse[]>([]);
 	async function afterUpdate() {
 		list = await bodies.getFullList<BodiesResponse>({
-			filter: current_workspace ? `workspace='${current_workspace}'` : undefined,
+			filter: workspace ? `workspace='${workspace}'` : undefined,
 			expand: 'workspace'
 		});
 	}
@@ -44,18 +44,18 @@
 			>
 			<WorkspaceSelector
 				className="w-50 ms-5 me-auto pt-6"
-				bind:value={current_workspace}
+				bind:value={workspace}
 				none={"Any workspace"}
 			/>
-			<Button onclick={() => ((current_competitor = {}), toggle(CompetitorDrawer))}><Plus /> Add new entity watch</Button>
+			<Button onclick={() => ((entity = {}), toggle(EntityFormDrawer))}><Plus /> Add new entity watch</Button>
 		</div>
 	</div>
 
 	<SiteTable
 		bodies={list}
-		edit={(c: BodiesResponse) => ((current_competitor = c), toggle(CompetitorDrawer))}
-		remove={() => toggle(DeleteDrawer)}
+		edit={(c: BodiesResponse) => ((entity = c), toggle(EntityFormDrawer))}
+		remove={(c: BodiesResponse) => ((entity = c), toggle(EntityDeleteDrawer))}
 	/>
 </main>
 
-<DrawerComponent bind:open data={current_competitor} {afterUpdate} />
+<DrawerComponent bind:open data={entity} callback={afterUpdate} />
