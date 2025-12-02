@@ -3,31 +3,41 @@ package services
 import (
 	"context"
 	"os"
+	"regexp"
+	"strings"
 
-	"github.com/mrk21/go-diff-fmt/difffmt"
+	"github.com/akedrou/textdiff"
 	openai "github.com/sashabaranov/go-openai"
-	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
+var ADD_DIFF, _ = regexp.Compile(`^\+(.*)$`)
+var REM_DIFF, _ = regexp.Compile(`^\-(.*)$`)
+var EMPTY_DIFF, _ = regexp.Compile(`^[\-\+]\s*$`)
+var NO_NEWLINE = `\ No newline at end of file`
+
 func DiffDescription(oldText string, newText string) string {
-	dmp := diffmatchpatch.New()
-	diffs := dmp.DiffMain(oldText, newText, false)
+	diff := textdiff.Unified("before", "after", oldText, newText)
 
-	lineDiffs := difffmt.MakeLineDiffsFromDMP(diffs)
-	hunks := difffmt.MakeHunks(lineDiffs, 3)
-	unifiedFmt := difffmt.NewUnifiedFormat(difffmt.UnifiedFormatOption{
-		ColorMode: difffmt.ColorNone,
-	})
+	// ignore header
+	diffLines := strings.Split(diff, "\n")
+	diffLines = diffLines[2:]
 
-	before := difffmt.NewDiffTarget("before")
-	after := difffmt.NewDiffTarget("after")
-	unifiedFmt.Sprint(before, after, hunks)
-
-	// return dmp.DiffPrettyText(diffs)
-	return unifiedFmt.Sprint(before, after, hunks)
+	lines := make([]string, 0)
+	for _, line := range diffLines {
+		if len(line) > 1 && line != NO_NEWLINE && !EMPTY_DIFF.MatchString(line) {
+			formatted := ADD_DIFF.ReplaceAllString(line, "ADDED: $1")
+			formatted = REM_DIFF.ReplaceAllString(formatted, "REMOVED: $1")
+			lines = append(lines, formatted)
+		}
+	}
+	return strings.Join(lines, "\n")
 }
 
-var prompt = "Here is a diff of a content that might have changed on a web page. Summarize the updated content with the minimal text. Ignore numbers which look like page numbers, likes count or similar.\n\n"
+var AI_DIFF_NARRATIVE_PROMPT = `
+Here is a diff of a content that might have changed on a web page.
+Summarize the updated content with the minimal text.
+Ignore content which look like page numbers, likes count, referrer codes or similar.
+`
 var AI_QUESTION_MAX_LENGTH = 16384
 
 func DiffNarrative(text string) (string, error) {
@@ -38,7 +48,7 @@ func DiffNarrative(text string) (string, error) {
 
 	client := openai.NewClient(apiKey)
 
-	text = prompt + text
+	text = AI_DIFF_NARRATIVE_PROMPT + text
 	if len(text) > AI_QUESTION_MAX_LENGTH {
 		text = text[:AI_QUESTION_MAX_LENGTH]
 	}
@@ -50,7 +60,7 @@ func DiffNarrative(text string) (string, error) {
 			Messages: []openai.ChatCompletionMessage{
 				{
 					Role:    openai.ChatMessageRoleUser,
-					Content: prompt + text,
+					Content: AI_DIFF_NARRATIVE_PROMPT + text,
 				},
 			},
 		},

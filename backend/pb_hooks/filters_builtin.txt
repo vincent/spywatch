@@ -4,3 +4,4 @@
 ! Syntax: AdBlock
 
 trustpilot.com##[class*='styles_carouselContainer__'], [class*='styles_trustpilotExperienceCardContainer__']
+linkedin.com##.top-level-modal-container, .li-footer.bg-transparent.w-full, #artdeco-global-alert-container

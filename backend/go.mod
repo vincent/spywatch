@@ -15,11 +15,23 @@ require (
 
 require (
 	github.com/JohannesKaufmann/dom v0.2.0 // indirect
+	github.com/akedrou/textdiff v0.1.0 // indirect
 	github.com/andybalholm/cascadia v1.3.3 // indirect
+	github.com/clipperhouse/displaywidth v0.6.0 // indirect
+	github.com/clipperhouse/stringish v0.1.1 // indirect
+	github.com/clipperhouse/uax29/v2 v2.3.0 // indirect
 	github.com/dop251/goja v0.0.0-20250309171923-bcd7cc6bf64c // indirect
 	github.com/go-sql-driver/mysql v1.9.1 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
+	github.com/k3a/html2text v1.2.1 // indirect
+	github.com/mattn/go-runewidth v0.0.19 // indirect
+	github.com/olekukonko/cat v0.0.0-20250911104152-50322a0618f6 // indirect
+	github.com/olekukonko/errors v1.1.0 // indirect
+	github.com/olekukonko/ll v0.1.3 // indirect
+	github.com/olekukonko/tablewriter v1.1.2 // indirect
+	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
 	golang.org/x/exp v0.0.0-20250408133849-7e4ce0ab07d0 // indirect
+	jaytaylor.com/html2text v0.0.0-20230321000545-74c2419ad056 // indirect
 )
 
 require (

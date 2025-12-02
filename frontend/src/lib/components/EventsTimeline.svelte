@@ -5,6 +5,7 @@
 	import { ArrowRightOutline } from 'flowbite-svelte-icons';
 
 	let { events }: { events: SnapshotsRecord[] } = $props();
+	let details = $state<Record<string, string>>({})
 </script>
 
 <Timeline>
@@ -13,12 +14,19 @@
 			title=""
 			date={Intl.DateTimeFormat('fr-FR').format(Date.parse(e.created as string))}
 		>
-			<p class="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
+			<p class="mb-4 text-base font-normal text-gray-500 dark:text-white">
 				{e.narrative}
 			</p>
-			<Button color="alternative" href={`/entities/${e.resource}/diff/${e.id}`}
-				>Learn more<ArrowRightOutline class="ms-2 h-5 w-5" /></Button
-			>
+			<div class="flex items-center">
+				<Button color="alternative" onclick={() => (details[e.id] = 'diff')}> Show diff <ArrowRightOutline class="ms-2 h-5 w-5" /></Button>
+				<Button color="alternative" onclick={() => (details[e.id] = 'content')}> Show content <ArrowRightOutline class="ms-2 h-5 w-5" /></Button>
+
+			</div>
+			{#if details[e.id] === 'diff'}
+				<pre class="border bg-gray-500">{e.diff}</pre>
+			{:else if details[e.id] === 'content'}
+				<pre class="border bg-gray-500">{e.content}</pre>
+			{/if}
 		</TimelineItem>
 	{/each}
 </Timeline>
