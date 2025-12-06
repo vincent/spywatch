@@ -43,7 +43,7 @@ func CreateWebsite(app *pocketbase.PocketBase, model *CreateWebsiteInput) (*core
 	return record, nil
 }
 
-func FindBodiesResources(app *pocketbase.PocketBase, competitorId string) ([]*core.Record, error) {
+func FindUncheckedResources(app *pocketbase.PocketBase, entityId string) ([]*core.Record, error) {
 	backStr := os.Getenv("SPYWATCH_REFETCH_HOURS")
 	back, err := strconv.Atoi(backStr)
 	if err != nil || back <= 0 {
@@ -51,15 +51,32 @@ func FindBodiesResources(app *pocketbase.PocketBase, competitorId string) ([]*co
 	}
 	resources, err := app.FindRecordsByFilter(
 		"resources",
-		"body = {:body} && url != '' && checked < {:checked}",
+		"url != '' && body = {:body} && checked < {:checked}",
 		"created",
 		10,
 		0,
-		dbx.Params{"body": competitorId},
+		dbx.Params{"body": entityId},
 		dbx.Params{"checked": time.Now().Add(-1 * time.Duration(back) * time.Hour).Format(time.RFC3339)},
 	)
 	if err != nil {
 		app.Logger().Error("[FindBodiesResources] cannot fetch resources", "error", err)
+		return nil, err
+	}
+	return resources, nil
+}
+
+func FindUpdatedResourcesByEntities(app *pocketbase.PocketBase, entityIds []string) ([]*core.Record, error) {
+	resources, err := app.FindRecordsByFilter(
+		"resources",
+		"url != '' && body.id ?= {:ws} && updated >= {:updated}",
+		"updated",
+		10,
+		0,
+		dbx.Params{"ws": entityIds},
+		dbx.Params{"updated": time.Now().Add(-1 * 30 * time.Hour).Format(time.RFC3339)},
+	)
+	if err != nil {
+		app.Logger().Error("[FindUpdatedResourcesByEntities] cannot fetch resources", "error", err)
 		return nil, err
 	}
 	return resources, nil
@@ -74,32 +91,20 @@ func FindBodies(app *pocketbase.PocketBase) ([]*core.Record, error) {
 	return bodies, nil
 }
 
-var MAX_NARRATIVE_LENGTH = 100000
-var MAX_CONTENT_LENGTH = 100000
-var MAX_DIFF_LENGTH = 100000
+type WorkspaceForRelease struct {
+	Body          string `db:"body"`
+	WorkspaceID   string `db:"workspaceID"`
+	WorkspaceName string `db:"workspaceName"`
+}
 
-func CreateSnapshot(app *pocketbase.PocketBase, resourceId string, content string, diff string, narrative string) error {
-
-	collection, err := app.FindCollectionByNameOrId("snapshots")
-	if err != nil {
-		return err
-	}
-
-	if len(narrative) > MAX_NARRATIVE_LENGTH {
-		narrative = narrative[:MAX_NARRATIVE_LENGTH]
-	}
-	if len(content) > MAX_CONTENT_LENGTH {
-		content = content[:MAX_CONTENT_LENGTH]
-	}
-	if len(diff) > MAX_DIFF_LENGTH {
-		diff = diff[:MAX_DIFF_LENGTH]
-	}
-
-	record := core.NewRecord(collection)
-	record.Set("narrative", narrative)
-	record.Set("resource", resourceId)
-	record.Set("content", content)
-	record.Set("diff", diff)
-
-	return app.Save(record)
+func FindWorkspacesForReleases(app *pocketbase.PocketBase) ([]WorkspaceForRelease, error) {
+	workspaces := []WorkspaceForRelease{}
+	err := app.DB().
+		Select("bodies.id as body", "bodies.workspace as workspaceID", "workspaces.name as workspaceName").
+		Distinct(true).
+		From("bodies").
+		InnerJoin("workspaces", dbx.NewExp("workspaces.id = bodies.workspace")).
+		Where(dbx.NewExp("workspace != ''")).
+		All(&workspaces)
+	return workspaces, err
 }

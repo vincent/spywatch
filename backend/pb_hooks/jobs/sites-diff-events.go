@@ -14,7 +14,7 @@ func RegisterDiffDescriptionsJob(app *pocketbase.PocketBase) {
 	app.Cron().MustAdd("DiffDescriptionsJob", "*/10 * * * *", func() {
 		websites, _ := db.FindBodies(app)
 		for _, website := range websites {
-			resources, _ := db.FindBodiesResources(app, website.Id)
+			resources, _ := db.FindUncheckedResources(app, website.Id)
 			if len(resources) == 0 {
 				app.Logger().Debug("[DiffDescriptionsJob] no resources for body", "body", website.Id)
 			}

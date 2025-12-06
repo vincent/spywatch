@@ -17,3 +17,17 @@ func InSlice(field string, items []string) string {
 	exp = exp + ")"
 	return exp
 }
+
+type User struct {
+	Id    string `db:"id"`
+	Name  string `db:"name"`
+	Email string `db:"email"`
+}
+
+func FindUsersByWorkspace(app *pocketbase.PocketBase, workspace string) ([]User, error) {
+	users := []User{}
+	err := app.DB().
+		NewQuery(`SELECT users.id, users.name, users.email FROM users LEFT JOIN json_each(users.workspaces) je WHERE je.value = '` + workspace + `'`).
+		All(&users)
+	return users, err
+}

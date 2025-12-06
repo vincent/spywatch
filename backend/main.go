@@ -130,6 +130,7 @@ func main() {
 
 	// // Custom jobs
 	jobs.RegisterDiffDescriptionsJob(app)
+	jobs.RegisterSendReleasesJob(app, hooksDir)
 
 	if err := app.Start(); err != nil {
 		log.Fatal(err)
