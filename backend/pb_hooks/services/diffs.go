@@ -1,30 +1,32 @@
 package services
 
 import (
-	"context"
 	"os"
+	"os/exec"
+	"path"
 	"regexp"
 	"strings"
 
-	"github.com/akedrou/textdiff"
-	openai "github.com/sashabaranov/go-openai"
+	"github.com/google/uuid"
 )
 
-var ADD_DIFF, _ = regexp.Compile(`^\+(.*)$`)
-var REM_DIFF, _ = regexp.Compile(`^\-(.*)$`)
-var EMPTY_DIFF, _ = regexp.Compile(`^[\-\+]\s*$`)
+var IGNORED_DIFF_LINE = regexp.MustCompile(`(email-protection)`)
+var ADD_DIFF = regexp.MustCompile(`^[>\+](.*)$`)
+var REM_DIFF = regexp.MustCompile(`^[<\-](.*)$`)
+var EMPTY_DIFF = regexp.MustCompile(`^[\-\+]\s*$`)
 var NO_NEWLINE = `\ No newline at end of file`
 
 func DiffDescription(oldText string, newText string) string {
-	diff := textdiff.Unified("before", "after", oldText, newText)
+	// diff := textdiff.Unified("before", "after", oldText, newText)
+	diff := diffCommand(oldText, newText)
+	diffLines := strings.Split(diff, "\n")
 
 	// ignore header
-	diffLines := strings.Split(diff, "\n")
-	diffLines = diffLines[2:]
+	// diffLines = diffLines[2:]
 
 	lines := make([]string, 0)
 	for _, line := range diffLines {
-		if len(line) > 1 && line != NO_NEWLINE && !EMPTY_DIFF.MatchString(line) {
+		if len(line) > 1 && line != NO_NEWLINE && !EMPTY_DIFF.MatchString(line) && !ignoredDiffLine(line) {
 			formatted := ADD_DIFF.ReplaceAllString(line, "ADDED: $1")
 			formatted = REM_DIFF.ReplaceAllString(formatted, "REMOVED: $1")
 			lines = append(lines, formatted)
@@ -33,42 +35,22 @@ func DiffDescription(oldText string, newText string) string {
 	return strings.Join(lines, "\n")
 }
 
-var AI_DIFF_NARRATIVE_PROMPT = `
-Here is a diff of a content that might have changed on a web page.
-Summarize the updated content with the minimal text.
-Ignore content which look like page numbers, likes count, referrer codes or similar.
-`
-var AI_QUESTION_MAX_LENGTH = 16384
-
-func DiffNarrative(text string) (string, error) {
-	apiKey := os.Getenv("OPENAI_API_KEY")
-	if apiKey == "" {
-		panic("no OPENAI_API_KEY defined")
-	}
-
-	client := openai.NewClient(apiKey)
-
-	text = AI_DIFF_NARRATIVE_PROMPT + text
-	if len(text) > AI_QUESTION_MAX_LENGTH {
-		text = text[:AI_QUESTION_MAX_LENGTH]
-	}
-
-	resp, err := client.CreateChatCompletion(
-		context.Background(),
-		openai.ChatCompletionRequest{
-			Model: openai.GPT3Dot5Turbo,
-			Messages: []openai.ChatCompletionMessage{
-				{
-					Role:    openai.ChatMessageRoleUser,
-					Content: AI_DIFF_NARRATIVE_PROMPT + text,
-				},
-			},
-		},
-	)
-
+func diffCommand(oldText string, newText string) string {
+	tempDir, err := os.MkdirTemp("", uuid.New().String())
 	if err != nil {
-		return "", err
+		return ""
 	}
+	tmpOld := path.Join(tempDir, "old")
+	tmpNew := path.Join(tempDir, "new")
 
-	return resp.Choices[0].Message.Content, nil
+	os.WriteFile(tmpOld, []byte(oldText), 0644)
+	os.WriteFile(tmpNew, []byte(newText), 0644)
+	cmd := exec.Command("diff", "--changed-group-format", "-%<+%>", "--unchanged-group-format", "", "--minimal", "--ignore-blank-lines", "--ignore-space-change", "--ignore-case", "--suppress-common-lines", tmpOld, tmpNew)
+	output, _ := cmd.Output()
+	os.RemoveAll(tempDir)
+	return string(output)
+}
+
+func ignoredDiffLine(line string) bool {
+	return IGNORED_DIFF_LINE.MatchString(line)
 }

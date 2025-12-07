@@ -3,11 +3,13 @@ package jobs
 import (
 	"pocketbase/pb_hooks/db"
 	"pocketbase/pb_hooks/services"
+	"pocketbase/pb_hooks/services/ai"
 	"pocketbase/pb_hooks/services/scrapper"
 	"time"
 
 	"github.com/pocketbase/dbx"
 	"github.com/pocketbase/pocketbase"
+	"github.com/pocketbase/pocketbase/core"
 )
 
 func RegisterDiffDescriptionsJob(app *pocketbase.PocketBase) {
@@ -19,7 +21,10 @@ func RegisterDiffDescriptionsJob(app *pocketbase.PocketBase) {
 				app.Logger().Debug("[DiffDescriptionsJob] no resources for body", "body", website.Id)
 			}
 			for _, res := range resources {
-				CreateResourceSnapshot(app, res.Id)
+				err := CreateResourceSnapshot(app, res.Id)
+				if err != nil {
+					logSnapshotLastError(app, res, err)
+				}
 			}
 		}
 	})
@@ -30,7 +35,7 @@ func CreateResourceSnapshot(app *pocketbase.PocketBase, resourceId string) error
 	res, err := app.FindRecordById("resources", resourceId)
 	if err != nil {
 		app.Logger().Error("[CreateResourceSnapshot] cannot find resource", "error", err)
-		return nil
+		return err
 	}
 
 	res.Set("checked", time.Now().Format(time.RFC3339))
@@ -40,12 +45,12 @@ func CreateResourceSnapshot(app *pocketbase.PocketBase, resourceId string) error
 	html, err := scrapper.FetchHTML(url)
 	if err != nil {
 		app.Logger().Error("[CreateResourceSnapshot] cannot fetch content", "error", err)
-		return nil
+		return err
 	}
 	newContent, err := scrapper.HtmlContent(app, html)
 	if err != nil {
 		app.Logger().Error("[CreateResourceSnapshot] cannot extract content", "error", err)
-		return nil
+		return err
 	}
 
 	lastSnapshots, err := app.FindRecordsByFilter(
@@ -58,7 +63,7 @@ func CreateResourceSnapshot(app *pocketbase.PocketBase, resourceId string) error
 	)
 	if err != nil {
 		app.Logger().Error("[CreateResourceSnapshot] cannot find previous content", "error", err)
-		return nil
+		return err
 	}
 
 	diff := ""
@@ -71,7 +76,7 @@ func CreateResourceSnapshot(app *pocketbase.PocketBase, resourceId string) error
 		if lastContent != newContent {
 			diff = services.DiffDescription(newContent, lastContent)
 			if diff != "" {
-				narrative, err = services.DiffNarrative(diff)
+				narrative, err = ai.DiffNarrative(diff)
 				if err != nil {
 					app.Logger().Error("[CreateResourceSnapshot] cannot get a narrative", "error", err)
 					return err
@@ -98,4 +103,9 @@ func CreateResourceSnapshot(app *pocketbase.PocketBase, resourceId string) error
 	}
 
 	return nil
+}
+
+func logSnapshotLastError(app *pocketbase.PocketBase, resource *core.Record, err error) {
+	resource.Set("last_error", err.Error())
+	app.Save(resource)
 }

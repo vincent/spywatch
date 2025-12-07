@@ -35,7 +35,20 @@ func HtmlContentPreFilters(input string) string {
 
 func TextContentPostFilters(input string) string {
 	output := RemoveMeaninglessLines(input)
+	output = ReplaceDoubleQuotes(output)
 	return output
+}
+
+// ReplaceDoubleQuotes
+func ReplaceDoubleQuotes(input string) string {
+	replacer := strings.NewReplacer(
+		"''", `"`,
+		"“", `"`,
+		"”", `"`,
+		"‘", `'`,
+		"’", `'`,
+	)
+	return replacer.Replace(input)
 }
 
 // RemoveMeaninglessLines removes lines that only contain punctuation, \, /, bullets, and whitespace
